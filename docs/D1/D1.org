@@ -1,5 +1,26 @@
+#+title: Project Proposal: Boo-Bot
+#+author: Devin Pohl
+#+author: Daniel Garcia
+#+date: 2/25/2021
+
 #+begin_comment
 Deliverable spec:
 
 You will specify the project objective, select the appropriate board, and specific hardware and software needed. Your proposal must include a one paragraph justification of the choices. A back-of-napkin drawing can be included. Identify from where the board will be ordered (Please ensure that you will receive it within a week or so), and how you will obtain the needed software and documentation, and the expected cost.
 #+end_comment
+
+* TODO [#A] Project Objective
+
+* DONE Members
+Members of this project are as follows:
+- Daniel Garcia
+- Devin Pohl
+
+* TODO [#B] Software Required
+** TODO [#A] Overview
+** TODO [#B] Justification
+
+* TODO [#B] Hardware Required
+** TODO [#A] Overview
+** TODO [#B] Justification
+** TODO [#C] Bill of Materials
