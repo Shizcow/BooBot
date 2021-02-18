@@ -1,0 +1,4 @@
+# org-mode generated files
+# pdfs are included for ease of browsing
+**/*.tex
+**/*.sagetex.sage

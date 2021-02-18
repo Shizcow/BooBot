@@ -2,14 +2,55 @@
 #+author: Devin Pohl
 #+author: Daniel Garcia
 #+date: 2/25/2021
+#+description: Team composition and idea proposal
+
+# This whole section is setup for org-mode formatting; no content here
+# This has been copied and modified from one of @Shizcow's academic essays
+* Org Preamble                                                       :ignore:
+** Org Options                                                      :ignore:
+# Do not export table of contents
+# Use smart quotes
+# Do not export TODO/progress tracking
+#+options: toc:nil ':t todo:nil
+
+** Fixing header space                                              :ignore:
+# lots of extra space in the title for some reason; fix it
+#+LaTeX_HEADER: \usepackage{titling}
+#+latex_header: \usepackage{authblk}
+#+LaTeX_HEADER: \setlength{\droptitle}{-6em}
+
+** Affiliation and Author                                           :ignore:
+# also include affiliation -- breaks #+author though so need to restate
+#+latex_header: \author{\vspace{-1em}Daniel Garcia}
+#+latex_header: \author{Devin Pohl}
+#+latex_header: \affil{CS 370\vspace{-3.4em}}
+\vspace{-2em}
+
+** Latex Class and General Formatting                               :ignore:
+*** APA Settings                                                   :ignore:
+#+LaTeX_class: apa7
+#+LaTeX_CLASS_OPTIONS: [doc,11pt]
+#+LaTeX_HEADER: \shorttitle{}
+
+*** Fix Formatting for Long Links in References                    :ignore:
+#+LaTeX_HEADER: \def\UrlBreaks{\do\/\do-}
+
+*** Spacing                                                        :ignore:
+#+LaTeX_HEADER: \usepackage{setspace}
+#+LaTeX_HEADER: \singlespace
+
+*** Tables                                                         :ignore:
+#+LaTeX_HEADER: \usepackage{array}
+#+LaTeX_HEADER: \newcolumntype{P}[1]{>{\centering\arraybackslash}p{#1}}
+
+
+* TODO [#A] Project Objective
 
 #+begin_comment
 Deliverable spec:
 
 You will specify the project objective, select the appropriate board, and specific hardware and software needed. Your proposal must include a one paragraph justification of the choices. A back-of-napkin drawing can be included. Identify from where the board will be ordered (Please ensure that you will receive it within a week or so), and how you will obtain the needed software and documentation, and the expected cost.
 #+end_comment
-
-* TODO [#A] Project Objective
 
 * DONE Members
 Members of this project are as follows:
