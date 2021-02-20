@@ -65,3 +65,17 @@ Members of this project are as follows:
 ** TODO [#A] Overview
 ** TODO [#B] Justification
 ** TODO [#C] Bill of Materials
+ 
+|--------+-------------------+------------+----------------------------------------------------|
+| Amount | Component         | Total Cost | Description                                        |
+|--------+-------------------+------------+----------------------------------------------------|
+|      2 | Drivers           | $6.33      | A4988 Stepper Motor Driver Module                  |
+|      2 | Motors            | $7.96      | MINEBEA NMB 2-phase 4-Wire 18° Stepper Motor       |
+|      1 | Amp               | $4.99      | MAX98357A I2S Class D amplifier                    |
+|      1 | Speaker           | $          |                                                    |
+|      1 | Lipo              | $9         | Lipo battery pack                                  |
+|      1 | Microphone        | $7.51      | I2S MEMS Microphone SPH0645LM4H                    |
+|      1 | Voltage Regulator | $????      | 12v 2A step up buck converter                      |
+|     10 | Capacitors        | $4.66      | 16v 1000UF Electrolitic SMD                        |
+|        |                   |            |                                                    |
+
