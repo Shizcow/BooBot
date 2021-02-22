@@ -69,17 +69,18 @@ Members of this project are as follows:
 |--------+-------------------+----------+----------------------------------------------------+---------------------------------------------------------------|
 | Amount | Component         | Price Ea | Description                                        |                                                          Cost |
 |--------+-------------------+----------+----------------------------------------------------+---------------------------------------------------------------|
-|      2 | Drivers           | $3.16    | A4988 Stepper Motor Driver Module                  |                                                          6.33 |
-|      2 | Motors            | $3.98    | MINEBEA NMB 2-phase 4-Wire 18° Stepper Motor       |                                                          7.96 |
-|      1 | Amp               | $4.99    | MAX98357A I2S Class D amplifier                    |                                                          4.99 |
-|      1 | Speaker           | $0.99    | 8 ohm speaker                                      |                                                          0.99 |
-|      1 | Lipo              | $15.05   | Lipo battery pack                                  |                                                         15.05 |
-|      1 | Microphone        | $7.51    | I2S MEMS Microphone SPH0645LM4H                    |                                                          7.51 |
-|      1 | Voltage Regulator | $0.79    | 3-24V to 12V 2A Adjustable Boost Step-Up Converter |                                                          0.79 |
-|     10 | Capacitors        | $0.466   | 16v 1000UF Electrolitic SMD                        |                                                          4.66 |
-|      1 | Raspberry pi      | $29.99   | Raspberry Pi 3 Model A + 2018 model                |                                                         29.99 |
+|      2 | Drivers           |  3.16    | A4988 Stepper Motor Driver Module                  |                                                          6.33 |
+|      2 | Motors            |  3.98    | MINEBEA NMB 2-phase 4-Wire 18° Stepper Motor       |                                                          7.96 |
+|      1 | Amp               |  4.99    | MAX98357A I2S Class D amplifier                    |                                                          4.99 |
+|      1 | Speaker           |  0.99    | 8 ohm speaker                                      |                                                          0.99 |
+|      1 | Lipo              |  15.05   | Lipo battery pack                                  |                                                         15.05 |
+|      1 | Microphone        |  7.51    | I2S MEMS Microphone SPH0645LM4H                    |                                                          7.51 |
+|      1 | Voltage Regulator |  0.79    | 3-24V to 12V 2A Adjustable Boost Step-Up Converter |                                                          0.79 |
+|     10 | Capacitors        |  0.466   | 16v 1000UF Electrolitic SMD                        |                                                          4.66 |
+|      1 | Raspberry pi      |  29.99   | Raspberry Pi 3 Model A + 2018 model                |                                                         29.99 |
+|      1 | 9-axis MPU        |  4.60    | MPU9250 (Gyro + Accelerometer + Compass            |                                                          4.60 |
 |--------+-------------------+----------+----------------------------------------------------+---------------------------------------------------------------|
-|        |                   |          | Total:                                             |                                                         78.27 |
+|        |                   |          | Total:                                             |                                                         82.87 |
 |--------+-------------------+----------+----------------------------------------------------+---------------------------------------------------------------|
 #+TBLFM: @11$5=vsum@2..@-1
 
