@@ -38,18 +38,29 @@
 *** Spacing                                                        :ignore:
 #+LaTeX_HEADER: \usepackage{setspace}
 #+LaTeX_HEADER: \singlespace
+#+LaTeX_HEADER: \setlength\parskip{1em plus 0.2em minus 0.1em}
 
 *** Tables                                                         :ignore:
 #+LaTeX_HEADER: \usepackage{array}
 #+LaTeX_HEADER: \newcolumntype{P}[1]{>{\centering\arraybackslash}p{#1}}
 
-* TODO [#A] Project Objective
+* DONE Project Objective
 
 #+begin_comment
 Deliverable spec:
 
 You will specify the project objective, select the appropriate board, and specific hardware and software needed. Your proposal must include a one paragraph justification of the choices. A back-of-napkin drawing can be included. Identify from where the board will be ordered (Please ensure that you will receive it within a week or so), and how you will obtain the needed software and documentation, and the expected cost.
 #+end_comment
+
+The goal of this project is to create a small, remote controlled robot.
+This robot, nicknamed the "Boo-Bot" by the authors, will be capable of sending real-time video/audio and taking real-time controls over the internet, allowing it to be controlled from anywhere with a network connection.
+A specific goal is to allow this bot to be controlled via Twitch live-stream chat, yielding more participation during demos.
+
+This project will be made as from-scratch as possible, with circuitry, drivers, and communications being designed and implemented throughout the course of the project wherever reasonable.
+We aim to make this as quality and clean as possible, leveraging the Electrical and Computer Engineering skills of the authors.
+
+The primary board is currently planned as a Raspberry Pi 3 Model A+ running stock Raspbian Lite.
+Programming will be done in multiple languages (Rust, C, perhaps Python) and take advantage of inter-process communication as learned in class or via FFI bindings.
 
 * DONE Members
 Members of this project are as follows:
