@@ -70,7 +70,7 @@ All components are purchased from various EBay stores, with shipping times betwe
 #+begin_center
 #+latex: \footnotesize
 #+latex: \renewcommand{\arraystretch}{1.7}
-#+ATTR_LATEX: :align l|ll|p{6.5cm}|l
+#+ATTR_LATEX: :align r|lr|p{6.5cm}|r
 | Amount | Component         | Price Ea ($) | Description                                              | Cost ($) |
 |--------+-------------------+--------------+----------------------------------------------------------+----------|
 |      2 | Drivers           |         3.16 | A4988 Stepper Motor Driver Module                        |     6.33 |
