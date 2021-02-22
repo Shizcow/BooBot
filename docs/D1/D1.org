@@ -24,12 +24,12 @@
 #+latex_header: \author{\vspace{-1em}Daniel Garcia}
 #+latex_header: \author{Devin Pohl}
 #+latex_header: \affil{CS 370\vspace{-3.4em}}
-\vspace{-2em}
+#+latex: \vspace{-2em}
 
 ** Latex Class and General Formatting                               :ignore:
 *** APA Settings                                                   :ignore:
 #+LaTeX_class: apa7
-#+LaTeX_CLASS_OPTIONS: [doc,11pt]
+#+LaTeX_CLASS_OPTIONS: [man,11pt]
 #+LaTeX_HEADER: \shorttitle{}
 
 *** Fix Formatting for Long Links in References                    :ignore:
@@ -42,7 +42,6 @@
 *** Tables                                                         :ignore:
 #+LaTeX_HEADER: \usepackage{array}
 #+LaTeX_HEADER: \newcolumntype{P}[1]{>{\centering\arraybackslash}p{#1}}
-
 
 * TODO [#A] Project Objective
 
@@ -65,8 +64,10 @@ Members of this project are as follows:
 ** TODO [#A] Overview
 ** TODO [#B] Justification
 ** TODO [#C] Bill of Materials
+Below is a bill of materials for this project, including all hardware used.
+All components are purchased from ebay, with shipping times between one and three weeks.
 
-#+begin_singlespace
+#+begin_center
 #+latex: \footnotesize
 #+latex: \renewcommand{\arraystretch}{1.7}
 #+ATTR_LATEX: :align l|ll|p{6.5cm}|l
@@ -88,4 +89,4 @@ Members of this project are as follows:
 #+TBLFM: @>$>=vsum(@<<..@>>)
 
 #+latex: \normalsize
-#+end_singlespace
+#+end_center
