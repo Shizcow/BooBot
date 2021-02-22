@@ -78,7 +78,7 @@ Members of this project are as follows:
 |      1 | Voltage Regulator |  0.79    | 3-24V to 12V 2A Adjustable Boost Step-Up Converter |                                                          0.79 |
 |     10 | Capacitors        |  0.466   | 16v 1000UF Electrolitic SMD                        |                                                          4.66 |
 |      1 | Raspberry pi      |  29.99   | Raspberry Pi 3 Model A + 2018 model                |                                                         29.99 |
-|      1 | 9-axis MPU        |  4.60    | MPU9250 (Gyro + Accelerometer + Compass            |                                                          4.60 |
+|      1 | 9-axis MPU        |  4.60    | MPU9250 (Gyro + Accelerometer + Compass)           |                                                          4.60 |
 |--------+-------------------+----------+----------------------------------------------------+---------------------------------------------------------------|
 |        |                   |          | Total:                                             |                                                         82.87 |
 |--------+-------------------+----------+----------------------------------------------------+---------------------------------------------------------------|
