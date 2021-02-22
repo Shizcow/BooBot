@@ -40,6 +40,10 @@
 #+LaTeX_HEADER: \singlespace
 #+LaTeX_HEADER: \setlength\parskip{1em plus 0.2em minus 0.1em}
 
+# make lists compact
+#+LaTeX_HEADER: \usepackage{enumitem}
+#+LaTeX_HEADER: \setlist[itemize]{noitemsep, topsep=-0.9em}
+
 *** Tables                                                         :ignore:
 #+LaTeX_HEADER: \usepackage{array}
 #+LaTeX_HEADER: \newcolumntype{P}[1]{>{\centering\arraybackslash}p{#1}}
@@ -67,14 +71,32 @@ Members of this project are as follows:
 - Daniel Garcia
 - Devin Pohl
 
-* TODO [#B] Software Required
-** TODO [#A] Overview
-** TODO [#B] Justification
+* DONE Software Required
+** DONE Overview
+Software in this project can be sectioned into three main areas:
+- Interacting with GPIO
+- Streaming Video
+- Interacting with Twitch Chat
+
+Interacting with Twitch chat will be done through Rust.
+GPIO interaction will be done through Rust or C, whichever has better library support.
+Streaming video may be done through existing Unix utilities, likely =avconf=.
+** DONE Justification
+Rust will be used wherever possible.
+This is due to highly developed relevant libraries, increased safety over C, and better resource usage over C -- we need every bit of performance possible.
+Rust's support for embedded and non-x86 environments has been rapidly maturing.
+Finally, Rust is just fun to program in, being much higher level than C or C++ without any of the penalties usually associated.
+If we find C to be better at a specific GPIO-related task, FFI can be used to provide slim bindings to Rust trivially easily.
+
+Because the Raspberry Pi A+ is rather low-spec, video streaming will be one of the hardest challenges to overcome.
+As such, we currently plan to use existing utilities here which are already proven to be incredibly fast.
+Given that this task is much more common than the other two points, we expect this to be the best way forward.
+We suspect a combination of =ffmpeg= and =avconf= will be good options.
 
 * TODO [#B] Hardware Required
 ** TODO [#A] Overview
 ** TODO [#B] Justification
-** DONE Bill of Materials
+* DONE Bill of Materials
 Below is a bill of materials for this project, including all hardware used.
 All components are purchased from various EBay stores, with shipping times between one and three weeks.
 
