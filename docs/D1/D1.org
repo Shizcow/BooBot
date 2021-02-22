@@ -63,9 +63,9 @@ Members of this project are as follows:
 * TODO [#B] Hardware Required
 ** TODO [#A] Overview
 ** TODO [#B] Justification
-** TODO [#C] Bill of Materials
+** DONE Bill of Materials
 Below is a bill of materials for this project, including all hardware used.
-All components are purchased from ebay, with shipping times between one and three weeks.
+All components are purchased from various EBay stores, with shipping times between one and three weeks.
 
 #+begin_center
 #+latex: \footnotesize
