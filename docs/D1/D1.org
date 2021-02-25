@@ -93,9 +93,28 @@ As such, we currently plan to use existing utilities here which are already prov
 Given that this task is much more common than the other two points, we expect this to be the best way forward.
 We suspect a combination of =ffmpeg= and =avconf= will be good options.
 
-* TODO [#B] Hardware Required
-** TODO [#A] Overview
-** TODO [#B] Justification
+* DONE [#B] Hardware Required
+** DONE [#A] Overview
+Hardware in this project can be sectioned into 4 main areas
+- SOC
+- Sensors
+- Actuators
+- Power
+- Miscellaneous
+
+The SOC will be tasked with control over sensors and actuators, data processing, and wireless communication.
+Sensors retrieve environmental data and transmitted it to the SOC for further processing.
+Actuators will react under the command of the SOC.
+Power hardware supplies current to all the sensors, actuators, SOC, and miscellaneous hardware.
+Miscellaneous hardware are the support components, these may work as an intermediary between the SOC and the actuators.
+** DONE [#B] Justification
+The Raspberry pi will be the main data processing unit.
+The pi has the capability to process data at high speed and integration of wireless communication. The pi also includes many gpios and hardware accelerated data busses. Because of its outstanding capabilities, it is an adequate fit for the tasks in this project.
+The sensors for this project will be the microphone, camera, ADC, and 9-axis MPU. These sensors will provide the user with the enviornmental data. The data can then be used to take desicions regarding future actions.
+The microphone will provide the user with audio input from its surroundings. The camera captures the visual feed from its surrounding. The ADC reads the battery level to prevent unexpected shutdowns. The 9-axis MPU provides feedback for collisions, speed, acceleration, direction, and rotation. 
+The actuators in this project allow the user to interact with its surroundings. These actuators are the display, speaker, servo, and stepper motors. The display shows text messages or visual cues sent by the server. The speaker allows the user to communicate back using audio. The server adjusts the tilt of the camera. The stepper motors enable the overall movement of the device.  
+Power is mainly focused on providing current to the entire system. The main components are the voltage regulators and the battery. The battery is the power storage and supply of this build. The regulators regulate the current provided by the battery before reaching all other electronic components.
+Miscellaneous components are used in case-specific tasks. An example is data interpretation and amplification for speakers. Another example is data storage for the operating system. These hardware components are mostly used to support actuators, sensors, and the SOC.
 * DONE Bill of Materials
 Below is a bill of materials for this project, including all hardware used.
 All components are purchased from various EBay stores, with shipping times between one and three weeks.
@@ -117,9 +136,8 @@ All components are purchased from various EBay stores, with shipping times betwe
 |      1 | Raspberry pi      |        29.99 | Raspberry Pi 3 Model A+ 2018 model                       |    29.99 |
 |      1 | 9-axis MPU        |         4.60 | MPU9250 (Gyro, Accelerometer, Compass)                   |     4.60 |
 |      1 | ADC               |         1.69 | INA219  DC current and voltage sensor                    |     1.69 |
+|      1 | Servo             |         1.79 | SG90 9G Micro Servo Motor                                |     1.79 |
+|      1 | Display           |         2.95 | 0.96" I2C OLED Display                                   |     2.95 |
+|      1 | SD Card           |         5.00 | 32 GB Class 10 Micro SD Card                             |     5.00 |
 |--------+-------------------+--------------+----------------------------------------------------------+----------|
-|        |                   |              | Total:                                                   |    84.56 |
-#+TBLFM: @>$>=vsum(@<<..@>>)
-
-#+latex: \normalsize
-#+end_center
+|        |                   |              | Total:                                                   |    94.48 |
