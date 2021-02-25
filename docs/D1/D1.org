@@ -95,7 +95,7 @@ We suspect a combination of =ffmpeg= and =avconf= will be good options.
 
 * DONE Hardware Required
 ** DONE Overview
-Hardware in this project can be sectioned into 5 main areas
+Hardware in this project can be sectioned into 4 main areas
 - SOC
 - Sensors
 - Actuators
@@ -149,3 +149,8 @@ All components are purchased from various EBay stores, with shipping times betwe
 
 #+latex: \normalsize
 #+end_center
+\clearpage
+* DONE Sketch
+Below is a back-of-the-napkin CAD drawing. It shows the basic structure of the bot: a bit like a driving dome-style security camera.
+
+[[./sketch.png]]
