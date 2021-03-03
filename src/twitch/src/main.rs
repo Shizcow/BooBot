@@ -1,5 +1,3 @@
-#![feature(trait_alias)]
-
 use twitchchat::PrivmsgExt;
 
 mod config;

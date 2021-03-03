@@ -74,7 +74,7 @@ pub struct ChatBot {
     user: String,
     key: String,
     commands:
-    HashMap<String, Box<dyn Fn(Chat<'_, '_>, Vec<&str>, Privilege) + Send + Sync + 'static>>,
+        HashMap<String, Box<dyn Fn(Chat<'_, '_>, Vec<&str>, Privilege) + Send + Sync + 'static>>,
     admins: Vec<String>,
 }
 
