@@ -20,6 +20,27 @@ fn main() -> anyhow::Result<()> {
         )
         .get_matches();
 
+    /* command overview:
+    -f, forward: move forward
+    -b, backward: move backward
+    -l, left: turn left
+    -r, right: turn right
+    -u, up: look up
+    -d, down: look down
+    -say: emit a phrase from the built in speaker
+
+    Always available:
+    -help: display commands
+    -info: bot state
+    -up, uptime: uptime
+    -source: source code
+
+    Additionally, admin commands are available:
+    -stop: stop accepting input from non-admins
+    -start: begin accepting input from non-admins
+    -quit: kill the bot
+    */
+
     let bot = ChatBot::new_from_file(matches.value_of("config").unwrap())?
         .with_command("!help", |args: Args| {
             let output = format!(
