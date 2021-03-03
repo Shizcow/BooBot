@@ -8,6 +8,28 @@ use clap::{App, Arg};
 
 static IS_ADMIN_ONLY: AtomicBool = AtomicBool::new(false);
 
+macro_rules! always_admin {
+    ($privilege: ident, $chat: ident) => {
+        if $privilege != Privilege::Admin {
+            return $chat
+                .writer
+                .reply($chat.msg, "You do not have permission to run this command.")
+                .unwrap();
+        }
+    };
+}
+
+macro_rules! sometimes_admin {
+    ($privilege: ident, $chat: ident) => {
+        if IS_ADMIN_ONLY.load(Ordering::Relaxed) == true && $privilege != Privilege::Admin {
+            return $chat
+                .writer
+                .reply($chat.msg, "The bot is currently in admin-only mode.")
+                .unwrap();
+        }
+    };
+}
+
 fn main() -> anyhow::Result<()> {
     let start = std::time::Instant::now();
 
@@ -50,40 +72,37 @@ fn main() -> anyhow::Result<()> {
     ).with_command(
         "quit",
         |chat, _, privilege| {
-	    if privilege != Privilege::Admin {
-		chat.writer.reply(chat.msg, "You do not have permission to run this command.").unwrap();
-	    } else {
-		chat.writer.say(chat.msg, "Shutting down BooBot").unwrap();
-		smol::block_on(async move {
-		    chat.quit.notify().await
-		});
-	    }
+	    always_admin!(privilege, chat);
+	    chat.writer.say(chat.msg, "Shutting down BooBot").unwrap();
+	    smol::block_on(async move {
+		chat.quit.notify().await
+	    });
         },
     ).with_command(
         "start",
         |chat, _, privilege| {
-	    if privilege != Privilege::Admin {
-		chat.writer.reply(chat.msg, "You do not have permission to run this command.").unwrap();
-	    } else {
-		match IS_ADMIN_ONLY.compare_exchange(true, false, Ordering::Acquire,
-						     Ordering::Relaxed) {
-		    Ok(_) => chat.writer.say(chat.msg, "Bot is now available to all users").unwrap(),
-		    Err(_) => chat.writer.say(chat.msg, "Bot is already available to all users").unwrap(),
-		}
+	    always_admin!(privilege, chat);
+	    match IS_ADMIN_ONLY.compare_exchange(true, false, Ordering::Acquire,
+						 Ordering::Relaxed) {
+		Ok(_) => chat.writer.say(chat.msg, "Bot is now available to all users").unwrap(),
+		Err(_) => chat.writer.say(chat.msg, "Bot is already available to all users").unwrap(),
 	    }
         },
     ).with_command(
         "stop",
         |chat, _, privilege| {
-	    if privilege != Privilege::Admin {
-		chat.writer.reply(chat.msg, "You do not have permission to run this command.").unwrap();
-	    } else {
-		match IS_ADMIN_ONLY.compare_exchange(false, true, Ordering::Acquire,
-						     Ordering::Relaxed) {
-		    Ok(_) => chat.writer.say(chat.msg, "Bot is now admin-only").unwrap(),
-		    Err(_) => chat.writer.say(chat.msg, "Bot is already admin-only").unwrap(),
-		}
+	    always_admin!(privilege, chat);
+	    match IS_ADMIN_ONLY.compare_exchange(false, true, Ordering::Acquire,
+						 Ordering::Relaxed) {
+		Ok(_) => chat.writer.say(chat.msg, "Bot is now admin-only").unwrap(),
+		Err(_) => chat.writer.say(chat.msg, "Bot is already admin-only").unwrap(),
 	    }
+        },
+    ).with_command(
+        "move",
+        |chat, _, privilege| {
+	    sometimes_admin!(privilege, chat);
+	    chat.writer.say(chat.msg, "You can move!").unwrap();
         },
     );
 
