@@ -73,7 +73,8 @@ pub struct ChatBot {
     channel: String,
     user: String,
     key: String,
-    commands: HashMap<String, Box<dyn Command>>,
+    commands:
+    HashMap<String, Box<dyn Fn(Chat<'_, '_>, Vec<&str>, Privilege) + Send + Sync + 'static>>,
     admins: Vec<String>,
 }
 
@@ -89,7 +90,11 @@ impl ChatBot {
             .enable_all_capabilities()
             .build()?)
     }
-    pub fn with_command(mut self, name: impl Into<String>, cmd: impl Command + 'static) -> Self {
+    pub fn with_command(
+        mut self,
+        name: impl Into<String>,
+        cmd: impl Fn(Chat<'_, '_>, Vec<&str>, Privilege) + Send + Sync + 'static,
+    ) -> Self {
         self.commands.insert(name.into(), Box::new(cmd));
         self
     }
@@ -140,7 +145,7 @@ impl ChatBot {
                                 continue;
                             }
 
-                            command.handle(chat, args, requested_privilege);
+                            command(chat, args, requested_privilege);
                         }
                     }
                 }
@@ -170,18 +175,4 @@ pub struct Chat<'a, 'b: 'a> {
     pub msg: &'a Privmsg<'b>,
     pub writer: &'a mut twitchchat::Writer,
     pub quit: NotifyHandle,
-}
-
-pub trait Command: Send + Sync {
-    fn handle(&self, chat: Chat<'_, '_>, args: Vec<&str>, granted_privilege: Privilege);
-}
-
-impl<F> Command for F
-where
-    F: Fn(Chat<'_, '_>, Vec<&str>, Privilege),
-    F: Send + Sync,
-{
-    fn handle(&self, chat: Chat<'_, '_>, args: Vec<&str>, granted_privilege: Privilege) {
-        (self)(chat, args, granted_privilege)
-    }
 }

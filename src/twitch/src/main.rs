@@ -1,3 +1,5 @@
+#![feature(trait_alias)]
+
 use twitchchat::PrivmsgExt;
 
 mod config;
@@ -43,7 +45,7 @@ fn main() -> anyhow::Result<()> {
 
     let bot = ChatBot::new_from_file(matches.value_of("config").unwrap())?.with_command(
         "help",
-        |chat: Chat, args: Vec<&str>, _| {
+        |chat, args, _| {
             let output = format!(
                 "Read the source code for help. A real help command will be implemented later."
             );
