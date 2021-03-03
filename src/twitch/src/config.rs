@@ -1,6 +1,11 @@
 use anyhow::anyhow;
 use serde::Deserialize;
-use twitchchat::{connector, runner::AsyncRunner};
+use twitchchat::{
+    messages::{Commands, Privmsg},
+    runner::{AsyncRunner, NotifyHandle, Status},
+};
+
+use std::collections::HashMap;
 
 // This is the config file ingest format for the [connection] field
 #[derive(Deserialize)]
@@ -30,6 +35,7 @@ impl Config {
             channel: self.connection.channel,
             user: self.connection.user,
             key: key,
+            commands: HashMap::new(),
         })
     }
     // run key_command on system and return it's output
@@ -52,6 +58,7 @@ pub struct ChatBot {
     channel: String,
     user: String,
     key: String,
+    commands: HashMap<String, Box<dyn Command>>,
 }
 
 impl ChatBot {
@@ -66,30 +73,94 @@ impl ChatBot {
             .enable_all_capabilities()
             .build()?)
     }
-    pub fn channel(&self) -> &String {
-        &self.channel
+    pub fn with_command(mut self, name: impl Into<String>, cmd: impl Command + 'static) -> Self {
+        self.commands.insert(name.into(), Box::new(cmd));
+        self
     }
-    pub async fn connect(&self) -> anyhow::Result<AsyncRunner> {
-        // create a connector using ``smol``, this connects to Twitch.
-        // you can provide a different address with `custom`
+    pub async fn run(&self) -> anyhow::Result<()> {
         // this can fail if DNS resolution cannot happen
-        let connector = connector::smol::Connector::twitch()?;
+        let connector = twitchchat::connector::smol::Connector::twitch()?;
 
-        println!("we're connecting!");
-        // create a new runner. this is a provided async 'main loop'
-        // this method will block until you're ready
         let mut runner = AsyncRunner::connect(connector, &self.get_user_config()?).await?;
-        println!("..and we're connected");
 
-        // and the identity Twitch gave you
-        println!("our identity: {:#?}", runner.identity);
+        println!("connecting, we are: {}", runner.identity.username());
 
-        let channel = self.channel();
+        println!("joining: {}", self.channel);
+        if let Err(err) = runner.join(&self.channel).await {
+            eprintln!("error while joining '{}': {}", self.channel, err);
+        }
 
-        println!("attempting to join '{}'", channel);
-        let _ = runner.join(&channel).await?;
-        println!("joined '{}'!", channel);
+        // if you store this somewhere, you can quit the bot gracefully
+        // let quit = runner.quit_handle();
 
-        Ok(runner)
+        println!("starting main loop");
+        self.main_loop(&mut runner).await
+    }
+    
+    // the main loop of the bot
+    async fn main_loop(&self, runner: &mut AsyncRunner) -> anyhow::Result<()> {
+        // this is clonable, but we can just share it via &mut
+        // this is rate-limited writer
+        let mut writer = runner.writer();
+        // this is clonable, but using it consumes it.
+        // this is used to 'quit' the main loop
+        let quit = runner.quit_handle();
+
+        loop {
+            // this drives the internal state of the crate
+            match runner.next_message().await? {
+                // if we get a Privmsg (you'll get an Commands enum for all messages received)
+                Status::Message(Commands::Privmsg(pm)) => {
+                    // see if its a command and do stuff with it
+                    if let Some(cmd) = Self::parse_command(pm.data()) {
+                        if let Some(command) = self.commands.get(cmd) {
+                            println!("dispatching to: {}", cmd.escape_debug());
+
+                            let args = Args {
+                                msg: &pm,
+                                writer: &mut writer,
+                                quit: quit.clone(),
+                            };
+
+                            command.handle(args);
+                        }
+                    }
+                }
+                // stop if we're stopping
+                Status::Quit | Status::Eof => break,
+                // ignore the rest
+                Status::Message(..) => continue,
+            }
+        }
+
+        println!("end of main loop");
+        Ok(())
+    }
+
+    fn parse_command(input: &str) -> Option<&str> {
+        if !input.starts_with('!') {
+            return None;
+        }
+        input.splitn(2, ' ').next()
+    }
+}
+
+pub struct Args<'a, 'b: 'a> {
+    pub msg: &'a Privmsg<'b>,
+    pub writer: &'a mut twitchchat::Writer,
+    pub quit: NotifyHandle,
+}
+
+pub trait Command: Send + Sync {
+    fn handle(&self, args: Args<'_, '_>);
+}
+
+impl<F> Command for F
+where
+    F: Fn(Args<'_, '_>),
+    F: Send + Sync,
+{
+    fn handle(&self, args: Args<'_, '_>) {
+        (self)(args)
     }
 }
