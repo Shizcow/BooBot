@@ -2,3 +2,6 @@
 channel = "shizcow"
 user = "shizcow"
 key_command = "secret-tool lookup user shizcow domain twitch.tv"
+
+[permissions]
+admins = ["shizcow"]

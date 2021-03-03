@@ -6,6 +6,13 @@ use twitchchat::{
 };
 
 use std::collections::HashMap;
+use twitchchat::PrivmsgExt;
+
+#[derive(PartialEq)]
+pub enum Privilege {
+    User,
+    Admin,
+}
 
 // This is the config file ingest format for the [connection] field
 #[derive(Deserialize)]
@@ -16,11 +23,18 @@ struct Connection {
     key_command: Option<String>,
 }
 
+// what users have additional rights?
+#[derive(Deserialize)]
+struct Permissions {
+    admins: Vec<String>,
+}
+
 // And there's only one [connection]
 // This is really just to make serde happy
 #[derive(Deserialize)]
 struct Config {
     connection: Connection,
+    permissions: Permissions,
 }
 
 impl Config {
@@ -36,6 +50,7 @@ impl Config {
             user: self.connection.user,
             key: key,
             commands: HashMap::new(),
+            admins: self.permissions.admins,
         })
     }
     // run key_command on system and return it's output
@@ -59,6 +74,7 @@ pub struct ChatBot {
     user: String,
     key: String,
     commands: HashMap<String, Box<dyn Command>>,
+    admins: Vec<String>,
 }
 
 impl ChatBot {
@@ -108,17 +124,23 @@ impl ChatBot {
                 // if we get a Privmsg (you'll get an Commands enum for all messages received)
                 Status::Message(Commands::Privmsg(pm)) => {
                     // see if its a command and do stuff with it
-                    if let Some(cmd) = Self::parse_command(pm.data()) {
+                    if let Some((cmd, args, requested_privilege)) = Self::parse_command(pm.data()) {
                         if let Some(command) = self.commands.get(cmd) {
-                            println!("dispatching to: {}", cmd.escape_debug());
-
-                            let args = Args {
+                            let chat = Chat {
                                 msg: &pm,
                                 writer: &mut writer,
                                 quit: quit.clone(),
                             };
 
-                            command.handle(args);
+                            // first need to check permissions
+                            if requested_privilege == Privilege::Admin
+                                && self.admins.iter().find(|u| u == &&pm.name()).is_none()
+                            {
+                                chat.writer.reply(chat.msg, "You do not have the privileges required to run admin commands").unwrap();
+                                continue;
+                            }
+
+                            command.handle(chat, args, requested_privilege);
                         }
                     }
                 }
@@ -133,30 +155,33 @@ impl ChatBot {
         Ok(())
     }
 
-    fn parse_command(input: &str) -> Option<&str> {
-        if !input.starts_with('!') {
-            return None;
-        }
-        input.splitn(2, ' ').next()
+    fn parse_command(input: &str) -> Option<(&str, Vec<&str>, Privilege)> {
+        let requested_privilege = match input.chars().nth(0) {
+            Some('!') => Privilege::User,
+            Some('?') => Privilege::Admin,
+            _ => return None,
+        };
+        let mut i = input[1..].split(' ');
+        Some((i.nth(0)?, i.skip(1).collect(), requested_privilege))
     }
 }
 
-pub struct Args<'a, 'b: 'a> {
+pub struct Chat<'a, 'b: 'a> {
     pub msg: &'a Privmsg<'b>,
     pub writer: &'a mut twitchchat::Writer,
     pub quit: NotifyHandle,
 }
 
 pub trait Command: Send + Sync {
-    fn handle(&self, args: Args<'_, '_>);
+    fn handle(&self, chat: Chat<'_, '_>, args: Vec<&str>, granted_privilege: Privilege);
 }
 
 impl<F> Command for F
 where
-    F: Fn(Args<'_, '_>),
+    F: Fn(Chat<'_, '_>, Vec<&str>, Privilege),
     F: Send + Sync,
 {
-    fn handle(&self, args: Args<'_, '_>) {
-        (self)(args)
+    fn handle(&self, chat: Chat<'_, '_>, args: Vec<&str>, granted_privilege: Privilege) {
+        (self)(chat, args, granted_privilege)
     }
 }
