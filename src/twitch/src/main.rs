@@ -44,8 +44,28 @@ fn main() -> anyhow::Result<()> {
     let bot = ChatBot::new_from_file(matches.value_of("config").unwrap())?.with_command(
         "help",
         |chat, args, _| {
+            //             let output = format!(
+            //                 "Supported commands are as follows:
+            // !help: print this message
+            // !info: get bot state
+            // !up, !uptime: get uptime
+            // !source: get a link to the source code
+
+            // !f, !forward: move forward
+            // !b, !backward: move backward
+            // !l, !left: turn left
+            // !r, !right: turn right
+            // !u, !up: look up
+            // !d, !down: look down
+            // !say: emit a phrase from the built in speaker
+
+            // Admin commands are:
+            // ?stop: stop the bot
+            // ?start: start the bot
+            // ?quit: kill the bot"
+            //             );
             let output = format!(
-                "Read the source code for help. A real help command will be implemented later."
+                "Twitch doesn't support newlines in its commands so go read this for help: "
             );
             println!("help called with args: {}", args.join(" "));
             chat.writer.say(chat.msg, &output).unwrap();
