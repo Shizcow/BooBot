@@ -1,11 +1,4 @@
-#![allow(dead_code)]
-use anyhow::Context as _;
 use twitchchat::{messages, AsyncRunner, Status};
-
-// some helpers for the demo
-fn get_env_var(key: &str) -> anyhow::Result<String> {
-    std::env::var(key).with_context(|| format!("please set `{}`", key))
-}
 
 // a 'main loop'
 pub async fn main_loop(mut runner: AsyncRunner) -> anyhow::Result<()> {

@@ -1,36 +1,10 @@
-// NOTE: this demo requires `--feature smol`.
-use twitchchat::{commands, connector, runner::AsyncRunner};
+use twitchchat::commands;
 
-// this is a helper module to reduce code deduplication
 mod include;
 use crate::include::main_loop;
 
 mod config;
 use config::*;
-
-async fn connect(config: &ConfigResolved) -> anyhow::Result<AsyncRunner> {
-    // create a connector using ``smol``, this connects to Twitch.
-    // you can provide a different address with `custom`
-    // this can fail if DNS resolution cannot happen
-    let connector = connector::smol::Connector::twitch()?;
-
-    println!("we're connecting!");
-    // create a new runner. this is a provided async 'main loop'
-    // this method will block until you're ready
-    let mut runner = AsyncRunner::connect(connector, &config.get_user_config()?).await?;
-    println!("..and we're connected");
-
-    // and the identity Twitch gave you
-    println!("our identity: {:#?}", runner.identity);
-
-    let channel = config.channel();
-
-    println!("attempting to join '{}'", channel);
-    let _ = runner.join(&channel).await?;
-    println!("joined '{}'!", channel);
-
-    Ok(runner)
-}
 
 use clap::{App, Arg};
 
@@ -47,14 +21,11 @@ fn main() -> anyhow::Result<()> {
         )
         .get_matches();
 
-    let config = toml::from_str::<Config>(&std::fs::read_to_string(
-        matches.value_of("config").unwrap(),
-    )?)?
-    .resolve()?;
+    let config = ChatBot::new_from_file(matches.value_of("config").unwrap())?;
 
     let fut = async move {
         // connect and join the provided channels
-        let runner = connect(&config).await?;
+        let runner = config.connect().await?;
 
         // you can get a handle to shutdown the runner
         let quit_handle = runner.quit_handle();
