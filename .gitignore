@@ -2,3 +2,5 @@
 # pdfs are included for ease of browsing
 **/*.tex
 **/*.sagetex.sage
+**/target
+**/Cargo.lock
