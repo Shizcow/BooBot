@@ -1,9 +1,12 @@
+use std::sync::atomic::{AtomicBool, Ordering};
 use twitchchat::PrivmsgExt;
 
 mod config;
 use config::*;
 
 use clap::{App, Arg};
+
+static IS_ADMIN_ONLY: AtomicBool = AtomicBool::new(false);
 
 fn main() -> anyhow::Result<()> {
     let start = std::time::Instant::now();
@@ -29,8 +32,13 @@ fn main() -> anyhow::Result<()> {
         "info",
         move |chat, _, _| {
             let output = format!(
-                "Uptime: {:.2?}, other info coming soon!",
-		start.elapsed()
+                "Uptime: {:.2?}, {}, other info coming soon!",
+		start.elapsed(),
+		if IS_ADMIN_ONLY.load(Ordering::Relaxed) {
+		    "only admins can control"
+		} else {
+		    "all users can control"
+		}
             );
             chat.writer.say(chat.msg, &output).unwrap();
         },
@@ -49,6 +57,32 @@ fn main() -> anyhow::Result<()> {
 		smol::block_on(async move {
 		    chat.quit.notify().await
 		});
+	    }
+        },
+    ).with_command(
+        "start",
+        |chat, _, privilege| {
+	    if privilege != Privilege::Admin {
+		chat.writer.reply(chat.msg, "This is an admin command. Run as ?start if you are an admin.").unwrap();
+	    } else {
+		match IS_ADMIN_ONLY.compare_exchange(true, false, Ordering::Acquire,
+						     Ordering::Relaxed) {
+		    Ok(_) => chat.writer.say(chat.msg, "Bot is now available to all users").unwrap(),
+		    Err(_) => chat.writer.say(chat.msg, "Bot is already available to all users").unwrap(),
+		}
+	    }
+        },
+    ).with_command(
+        "stop",
+        |chat, _, privilege| {
+	    if privilege != Privilege::Admin {
+		chat.writer.reply(chat.msg, "This is an admin command. Run as ?stop if you are an admin.").unwrap();
+	    } else {
+		match IS_ADMIN_ONLY.compare_exchange(false, true, Ordering::Acquire,
+						     Ordering::Relaxed) {
+		    Ok(_) => chat.writer.say(chat.msg, "Bot is now admin-only").unwrap(),
+		    Err(_) => chat.writer.say(chat.msg, "Bot is already admin-only").unwrap(),
+		}
 	    }
         },
     );
