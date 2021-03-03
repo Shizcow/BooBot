@@ -30,6 +30,20 @@ macro_rules! sometimes_admin {
     };
 }
 
+#[derive(PartialEq, Debug)]
+enum Direction {
+    Forward,
+    Back,
+    Left,
+    Right,
+    Up,
+    Down,
+}
+
+fn dispatch_move(d: Direction) {
+    println!("moving: {:?}", d);
+}
+
 fn main() -> anyhow::Result<()> {
     let start = std::time::Instant::now();
 
@@ -45,13 +59,15 @@ fn main() -> anyhow::Result<()> {
         )
         .get_matches();
 
-    let bot = ChatBot::new_from_file(matches.value_of("config").unwrap())?.with_command(
-        "help",
+    let bot = ChatBot::new_from_file(matches.value_of("config").unwrap())?
+    .with_greeting("BooBot is online")
+    .with_command(
+        &["help"],
         |chat, _, _| {
             chat.writer.say(chat.msg, "Twitch doesn't support newlines in its commands so go read this for help: https://github.com/Shizcow/BooBot/blob/subproject/twitch/src/twitch/README.md").unwrap();
         },
     ).with_command(
-        "info",
+        &["info"],
         move |chat, _, _| {
             let output = format!(
                 "Uptime: {:.2?}, {}, other info coming soon!",
@@ -65,12 +81,12 @@ fn main() -> anyhow::Result<()> {
             chat.writer.say(chat.msg, &output).unwrap();
         },
     ).with_command(
-        "source",
+        &["source"],
         |chat, _, _| {
             chat.writer.say(chat.msg, "Source code: https://github.com/Shizcow/BooBot").unwrap();
         },
     ).with_command(
-        "quit",
+        &["q", "quit"],
         |chat, _, privilege| {
 	    always_admin!(privilege, chat);
 	    chat.writer.say(chat.msg, "Shutting down BooBot").unwrap();
@@ -79,7 +95,7 @@ fn main() -> anyhow::Result<()> {
 	    });
         },
     ).with_command(
-        "start",
+        &["start"],
         |chat, _, privilege| {
 	    always_admin!(privilege, chat);
 	    match IS_ADMIN_ONLY.compare_exchange(true, false, Ordering::Acquire,
@@ -89,7 +105,7 @@ fn main() -> anyhow::Result<()> {
 	    }
         },
     ).with_command(
-        "stop",
+        &["stop"],
         |chat, _, privilege| {
 	    always_admin!(privilege, chat);
 	    match IS_ADMIN_ONLY.compare_exchange(false, true, Ordering::Acquire,
@@ -99,10 +115,10 @@ fn main() -> anyhow::Result<()> {
 	    }
         },
     ).with_command(
-        "move",
+        &["f", "forward"],
         |chat, _, privilege| {
 	    sometimes_admin!(privilege, chat);
-	    chat.writer.say(chat.msg, "You can move!").unwrap();
+	    dispatch_move(Direction::Forward);
         },
     );
 

@@ -1,6 +1,7 @@
 use anyhow::anyhow;
 use serde::Deserialize;
 use twitchchat::{
+    commands,
     messages::{Commands, Privmsg},
     runner::{AsyncRunner, NotifyHandle, Status},
 };
@@ -50,6 +51,7 @@ impl Config {
             key: key,
             commands: HashMap::new(),
             admins: self.permissions.admins,
+            greeting: None,
         })
     }
     // run key_command on system and return it's output
@@ -69,11 +71,14 @@ impl Config {
 
 // the useful struct -- here `key` is in plaintext
 pub struct ChatBot {
+    greeting: Option<&'static str>,
     channel: String,
     user: String,
     key: String,
-    commands:
-        HashMap<String, Box<dyn Fn(Chat<'_, '_>, Vec<&str>, Privilege) + Send + Sync + 'static>>,
+    commands: HashMap<
+        &'static [&'static str],
+        Box<dyn Fn(Chat<'_, '_>, Vec<&str>, Privilege) + Send + Sync + 'static>,
+    >,
     admins: Vec<String>,
 }
 
@@ -89,12 +94,16 @@ impl ChatBot {
             .enable_all_capabilities()
             .build()?)
     }
+    pub fn with_greeting(mut self, g: &'static str) -> Self {
+        self.greeting = Some(g);
+        self
+    }
     pub fn with_command(
         mut self,
-        name: impl Into<String>,
+        name: &'static [&'static str],
         cmd: impl Fn(Chat<'_, '_>, Vec<&str>, Privilege) + Send + Sync + 'static,
     ) -> Self {
-        self.commands.insert(name.into(), Box::new(cmd));
+        self.commands.insert(name, Box::new(cmd));
         self
     }
     pub async fn run(&self) -> anyhow::Result<()> {
@@ -107,6 +116,13 @@ impl ChatBot {
         println!("joining: {}", self.channel);
         if let Err(err) = runner.join(&self.channel).await {
             eprintln!("error while joining '{}': {}", self.channel, err);
+        }
+
+        if self.greeting.is_some() {
+            runner
+                .writer()
+                .encode(commands::privmsg(&self.channel, self.greeting.unwrap()))
+                .await?;
         }
 
         println!("starting main loop");
@@ -129,7 +145,9 @@ impl ChatBot {
                 Status::Message(Commands::Privmsg(pm)) => {
                     // see if its a command and do stuff with it
                     if let Some((cmd, args)) = Self::parse_command(pm.data()) {
-                        if let Some(command) = self.commands.get(cmd) {
+                        if let Some(command) = self.commands.iter().find_map(|(key, val)| {
+                            key.iter().find(|alias| alias == &&cmd).map(|_| val)
+                        }) {
                             let chat = Chat {
                                 msg: &pm,
                                 writer: &mut writer,

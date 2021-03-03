@@ -16,4 +16,4 @@ And these movement commands, available unless disabled by !stop:
 Admin commands are:
 - !stop: stop the bot
 - !start: start the bot
-- !quit: kill the bot
+- !q, !quit: kill the bot
