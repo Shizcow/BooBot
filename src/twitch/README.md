@@ -4,7 +4,7 @@ This bot supports the following general commands:
 - !info: get bot state (uptime, charge, etc)
 - !source: get a link to the source code
 
-And these movement commands:
+And these movement commands, available unless disabled by !stop:
 - !f, !forward: move forward
 - !b, !backward: move backward
 - !l, !left: turn left
@@ -14,6 +14,6 @@ And these movement commands:
 - !say: emit a phrase from the built in speaker
 
 Admin commands are:
-- ?stop: stop the bot
-- ?start: start the bot
-- ?quit: kill the bot
+- !stop: stop the bot
+- !start: start the bot
+- !quit: kill the bot

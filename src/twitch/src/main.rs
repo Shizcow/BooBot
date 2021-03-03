@@ -51,7 +51,7 @@ fn main() -> anyhow::Result<()> {
         "quit",
         |chat, _, privilege| {
 	    if privilege != Privilege::Admin {
-		chat.writer.reply(chat.msg, "This is an admin command. Run as ?quit if you are an admin.").unwrap();
+		chat.writer.reply(chat.msg, "You do not have permission to run this command.").unwrap();
 	    } else {
 		chat.writer.say(chat.msg, "Shutting down BooBot").unwrap();
 		smol::block_on(async move {
@@ -63,7 +63,7 @@ fn main() -> anyhow::Result<()> {
         "start",
         |chat, _, privilege| {
 	    if privilege != Privilege::Admin {
-		chat.writer.reply(chat.msg, "This is an admin command. Run as ?start if you are an admin.").unwrap();
+		chat.writer.reply(chat.msg, "You do not have permission to run this command.").unwrap();
 	    } else {
 		match IS_ADMIN_ONLY.compare_exchange(true, false, Ordering::Acquire,
 						     Ordering::Relaxed) {
@@ -76,7 +76,7 @@ fn main() -> anyhow::Result<()> {
         "stop",
         |chat, _, privilege| {
 	    if privilege != Privilege::Admin {
-		chat.writer.reply(chat.msg, "This is an admin command. Run as ?stop if you are an admin.").unwrap();
+		chat.writer.reply(chat.msg, "You do not have permission to run this command.").unwrap();
 	    } else {
 		match IS_ADMIN_ONLY.compare_exchange(false, true, Ordering::Acquire,
 						     Ordering::Relaxed) {

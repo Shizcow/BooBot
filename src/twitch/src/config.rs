@@ -6,7 +6,6 @@ use twitchchat::{
 };
 
 use std::collections::HashMap;
-use twitchchat::PrivmsgExt;
 
 #[derive(PartialEq)]
 pub enum Privilege {
@@ -129,7 +128,7 @@ impl ChatBot {
                 // if we get a Privmsg (you'll get an Commands enum for all messages received)
                 Status::Message(Commands::Privmsg(pm)) => {
                     // see if its a command and do stuff with it
-                    if let Some((cmd, args, requested_privilege)) = Self::parse_command(pm.data()) {
+                    if let Some((cmd, args)) = Self::parse_command(pm.data()) {
                         if let Some(command) = self.commands.get(cmd) {
                             let chat = Chat {
                                 msg: &pm,
@@ -138,14 +137,14 @@ impl ChatBot {
                             };
 
                             // first need to check permissions
-                            if requested_privilege == Privilege::Admin
-                                && self.admins.iter().find(|u| u == &&pm.name()).is_none()
-                            {
-                                chat.writer.reply(chat.msg, "You do not have the privileges required to run admin commands").unwrap();
-                                continue;
-                            }
+                            let user_privilege =
+                                if self.admins.iter().find(|u| u == &&pm.name()).is_none() {
+                                    Privilege::User
+                                } else {
+                                    Privilege::Admin
+                                };
 
-                            command(chat, args, requested_privilege);
+                            command(chat, args, user_privilege);
                         }
                     }
                 }
@@ -160,14 +159,12 @@ impl ChatBot {
         Ok(())
     }
 
-    fn parse_command(input: &str) -> Option<(&str, Vec<&str>, Privilege)> {
-        let requested_privilege = match input.chars().nth(0) {
-            Some('!') => Privilege::User,
-            Some('?') => Privilege::Admin,
-            _ => return None,
-        };
+    fn parse_command(input: &str) -> Option<(&str, Vec<&str>)> {
+        if input.chars().nth(0) != Some('!') {
+            return None;
+        }
         let mut i = input[1..].split(' ');
-        Some((i.nth(0)?, i.skip(1).collect(), requested_privilege))
+        Some((i.nth(0)?, i.skip(1).collect()))
     }
 }
 
