@@ -1,8 +1,7 @@
 ## help
 This bot supports the following general commands:
 - !help: print this message
-- !info: get bot state
-- !up, !uptime: get uptime
+- !info: get bot state (uptime, charge, etc)
 - !source: get a link to the source code
 
 And these movement commands:

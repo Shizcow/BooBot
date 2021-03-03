@@ -43,32 +43,34 @@ fn main() -> anyhow::Result<()> {
 
     let bot = ChatBot::new_from_file(matches.value_of("config").unwrap())?.with_command(
         "help",
-        |chat, args, _| {
-            //             let output = format!(
-            //                 "Supported commands are as follows:
-            // !help: print this message
-            // !info: get bot state
-            // !up, !uptime: get uptime
-            // !source: get a link to the source code
-
-            // !f, !forward: move forward
-            // !b, !backward: move backward
-            // !l, !left: turn left
-            // !r, !right: turn right
-            // !u, !up: look up
-            // !d, !down: look down
-            // !say: emit a phrase from the built in speaker
-
-            // Admin commands are:
-            // ?stop: stop the bot
-            // ?start: start the bot
-            // ?quit: kill the bot"
-            //             );
+        |chat, _, _| {
+            chat.writer.say(chat.msg, "Twitch doesn't support newlines in its commands so go read this for help: https://github.com/Shizcow/BooBot/blob/subproject/twitch/src/twitch/README.md").unwrap();
+        },
+    ).with_command(
+        "info",
+        move |chat, _, _| {
             let output = format!(
-                "Twitch doesn't support newlines in its commands so go read this for help: "
+                "Uptime: {:.2?}, other info coming soon!",
+		start.elapsed()
             );
-            println!("help called with args: {}", args.join(" "));
             chat.writer.say(chat.msg, &output).unwrap();
+        },
+    ).with_command(
+        "source",
+        |chat, _, _| {
+            chat.writer.say(chat.msg, "Source code: https://github.com/Shizcow/BooBot").unwrap();
+        },
+    ).with_command(
+        "quit",
+        |chat, _, privilege| {
+	    if privilege != Privilege::Admin {
+		chat.writer.reply(chat.msg, "This is an admin command. Run as ?quit if you are an admin.").unwrap();
+	    } else {
+		chat.writer.say(chat.msg, "Shutting down BooBot").unwrap();
+		smol::block_on(async move {
+		    chat.quit.notify().await
+		});
+	    }
         },
     );
     // .with_command("!info", |chat: Chat| {
