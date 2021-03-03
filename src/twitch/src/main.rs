@@ -21,6 +21,16 @@ fn main() -> anyhow::Result<()> {
         .get_matches();
 
     let bot = ChatBot::new_from_file(matches.value_of("config").unwrap())?
+        .with_command("!help", |args: Args| {
+            let output = format!(
+                "Read the source code for help. A real help command will be implemented later."
+            );
+            args.writer.say(args.msg, &output).unwrap();
+        })
+        .with_command("!info", |args: Args| {
+            let output = format!("Source Code: https://github.com/Shizcow/BooBot");
+            args.writer.say(args.msg, &output).unwrap();
+        })
         .with_command("!hello", |args: Args| {
             let output = format!("hello {}!", args.msg.name());
             // We can 'reply' to this message using a writer + our output message

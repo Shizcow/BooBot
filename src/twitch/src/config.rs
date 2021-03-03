@@ -78,7 +78,6 @@ impl ChatBot {
         self
     }
     pub async fn run(&self) -> anyhow::Result<()> {
-        // this can fail if DNS resolution cannot happen
         let connector = twitchchat::connector::smol::Connector::twitch()?;
 
         let mut runner = AsyncRunner::connect(connector, &self.get_user_config()?).await?;
@@ -90,14 +89,11 @@ impl ChatBot {
             eprintln!("error while joining '{}': {}", self.channel, err);
         }
 
-        // if you store this somewhere, you can quit the bot gracefully
-        // let quit = runner.quit_handle();
-
         println!("starting main loop");
         self.main_loop(&mut runner).await
     }
-    
-    // the main loop of the bot
+
+    // executes commands
     async fn main_loop(&self, runner: &mut AsyncRunner) -> anyhow::Result<()> {
         // this is clonable, but we can just share it via &mut
         // this is rate-limited writer
@@ -133,7 +129,7 @@ impl ChatBot {
             }
         }
 
-        println!("end of main loop");
+        println!("Bot exited gracefully");
         Ok(())
     }
 
