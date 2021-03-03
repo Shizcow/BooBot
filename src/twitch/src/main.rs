@@ -23,14 +23,11 @@ async fn connect(config: &ConfigResolved) -> anyhow::Result<AsyncRunner> {
     // and the identity Twitch gave you
     println!("our identity: {:#?}", runner.identity);
 
-    for channel in config.channels_to_join() {
-        // the runner itself has 'blocking' join/part to ensure you join/leave a channel.
-        // these two methods return whether the connection was closed early.
-        // we'll ignore it for this demo
-        println!("attempting to join '{}'", channel);
-        let _ = runner.join(&channel).await?;
-        println!("joined '{}'!", channel);
-    }
+    let channel = config.channel();
+
+    println!("attempting to join '{}'", channel);
+    let _ = runner.join(&channel).await?;
+    println!("joined '{}'!", channel);
 
     Ok(runner)
 }
@@ -68,16 +65,13 @@ fn main() -> anyhow::Result<()> {
         // spawn something off in the background that'll exit in 10 seconds
         smol::spawn({
             let mut writer = writer.clone();
-            let channels = config.channels_to_join();
+            let channel = config.channel().clone();
             async move {
                 println!("in 10 seconds we'll exit");
                 smol::Timer::after(std::time::Duration::from_secs(10)).await;
 
-                // send one final message to all channels
-                for channel in channels {
-                    let cmd = commands::privmsg(&channel, "goodbye, world");
-                    writer.encode(cmd).await.unwrap();
-                }
+                let cmd = commands::privmsg(&channel, "goodbye, world");
+                writer.encode(cmd).await.unwrap();
 
                 println!("sending quit signal");
                 quit_handle.notify().await;
@@ -86,11 +80,9 @@ fn main() -> anyhow::Result<()> {
         .detach();
 
         // you can encode all sorts of 'commands'
-        for channel in config.channels_to_join() {
-            writer
-                .encode(commands::privmsg(&channel, "Test from a bot"))
-                .await?;
-        }
+        writer
+            .encode(commands::privmsg(&config.channel(), "Test from a bot"))
+            .await?;
 
         println!("starting main loop");
         // your 'main loop'. you'll just call next_message() until you're done

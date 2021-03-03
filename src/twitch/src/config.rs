@@ -1,20 +1,24 @@
 use anyhow::anyhow;
 use serde::Deserialize;
 
+// This is the config file ingest format for the [connection] field
 #[derive(Deserialize)]
-pub struct Connection {
+struct Connection {
     channel: String,
     user: String,
     key: Option<String>,
     key_command: Option<String>,
 }
 
+// And there's only one [connection]
+// This is really just to make serde happy
 #[derive(Deserialize)]
 pub struct Config {
     connection: Connection,
 }
 
 impl Config {
+    // convert into a ConfigResolved by grabbing the key from the system
     pub fn resolve(self) -> anyhow::Result<ConfigResolved> {
         let key = if self.connection.key.is_some() {
             self.connection.key.unwrap()
@@ -27,6 +31,7 @@ impl Config {
             key: key,
         })
     }
+    // run key_command on system and return it's output
     fn get_key_password(&self) -> anyhow::Result<String> {
         let cmd_string = self.connection.key_command.as_ref().ok_or(anyhow!(
             "Neither `key` nor `key_command` field present in config file",
@@ -41,6 +46,7 @@ impl Config {
     }
 }
 
+// the useful struct -- here `key` is in plaintext
 pub struct ConfigResolved {
     channel: String,
     user: String,
@@ -48,18 +54,15 @@ pub struct ConfigResolved {
 }
 
 impl ConfigResolved {
+    // generate the config required for twitchchat
     pub fn get_user_config(&self) -> anyhow::Result<twitchchat::UserConfig> {
-        // you need a `UserConfig` to connect to Twitch
         Ok(twitchchat::UserConfig::builder()
-            // the name of the associated twitch account
             .name(&self.user)
-            // and the provided OAuth token
-           .token(&self.key)
-            // and enable all of the advanced message signaling from Twitch
+            .token(&self.key)
             .enable_all_capabilities()
             .build()?)
     }
-    pub fn channels_to_join(&self) -> Vec<String> {
-        self.channel.split(',').map(ToString::to_string).collect()
+    pub fn channel(&self) -> &String {
+        &self.channel
     }
 }
