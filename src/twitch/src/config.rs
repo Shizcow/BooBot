@@ -182,7 +182,9 @@ impl ChatBot {
             return None;
         }
         let mut i = input[1..].split(' ');
-        Some((i.nth(0)?, i.skip(1).collect()))
+        let command = i.next()?;
+        let args = i.collect();
+        Some((command, args))
     }
 }
 

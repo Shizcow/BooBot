@@ -33,7 +33,7 @@ macro_rules! sometimes_admin {
 #[derive(PartialEq, Debug)]
 enum Direction {
     Forward,
-    Back,
+    Backward,
     Left,
     Right,
     Up,
@@ -119,6 +119,46 @@ fn main() -> anyhow::Result<()> {
         |chat, _, privilege| {
 	    sometimes_admin!(privilege, chat);
 	    dispatch_move(Direction::Forward);
+        },
+    ).with_command(
+        &["b", "backward"],
+        |chat, _, privilege| {
+	    sometimes_admin!(privilege, chat);
+	    dispatch_move(Direction::Backward);
+        },
+    ).with_command(
+        &["l", "left"],
+        |chat, _, privilege| {
+	    sometimes_admin!(privilege, chat);
+	    dispatch_move(Direction::Left);
+        },
+    ).with_command(
+        &["r", "right"],
+        |chat, _, privilege| {
+	    sometimes_admin!(privilege, chat);
+	    dispatch_move(Direction::Right);
+        },
+    ).with_command(
+        &["u", "up"],
+        |chat, _, privilege| {
+	    sometimes_admin!(privilege, chat);
+	    dispatch_move(Direction::Up);
+        },
+    ).with_command(
+        &["d", "down"],
+        |chat, _, privilege| {
+	    sometimes_admin!(privilege, chat);
+	    dispatch_move(Direction::Down);
+        },
+    ).with_command(
+        &["say"],
+        |chat, args, privilege| {
+	    sometimes_admin!(privilege, chat);
+	    let phrase: String = args.join(" ");
+	    println!("saying phrase '{}'", phrase);
+	    std::process::Command::new("flite")
+                .args(&["-t", &phrase])
+                .output().expect("Failed to launch flite -- it it installed?");
         },
     );
 
