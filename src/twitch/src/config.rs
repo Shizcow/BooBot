@@ -125,7 +125,7 @@ impl ChatBot {
                 .await?;
         }
 
-        println!("starting main loop");
+        println!("Connected!");
         self.main_loop(&mut runner).await
     }
 
