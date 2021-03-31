@@ -54,11 +54,11 @@
   # At this point you must have acquired and installed all the software needed and should have made some progress in developing the code needed.
   # Provide Hardware proof of purchase
 
-  ./CircuitDiagram.png
+  [[./CircuitDiagram.png]]
 
-  ./PCBDiagram.png
+  [[./PCBDiagram.png]]
   
-  ./PCB.png
+  [[./PCB.png]]
 
 * TODO Curret Status
   # The report will describe the status of the project.
