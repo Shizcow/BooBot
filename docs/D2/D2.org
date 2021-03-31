@@ -1,4 +1,4 @@
-#+title: Project Proposal: Boo-Bot
+#+title: Progress Report: Boo-Bot
 #+author: Devin Pohl
 #+author: Daniel Garcia
 #+date: 4/1/2021
@@ -23,8 +23,8 @@
 # also include affiliation -- breaks #+author though so need to restate
 #+latex_header: \author{\vspace{-1em}Daniel Garcia}
 #+latex_header: \author{Devin Pohl}
-#+latex_header: \affil{CS 370\vspace{-3.4em}}
-#+latex: \vspace{-2em}
+#+latex_header: \affil{CS 370\vspace{-5em}}
+#+latex: \vspace{-2.5em}
 
 ** Latex Class and General Formatting                               :ignore:
 *** APA Settings                                                   :ignore:
@@ -48,17 +48,54 @@
 #+LaTeX_HEADER: \usepackage{array}
 #+LaTeX_HEADER: \newcolumntype{P}[1]{>{\centering\arraybackslash}p{#1}}
 
-* TODO Code Development
-  # At this point you must have acquired and installed all the software needed and should have made some progress in developing the code needed.
+* DONE Project Overview
+# > A specific goal is to allow this bot to be controlled via Twitch live-stream chat, yielding more participation during demos.
+# So I'm restating most of this
+
+The goal of this project is to create a small, remote controlled robot.
+This robot, nicknamed the "Boo-Bot" by the authors, is capable of sending real-time video/audio and taking real-time controls over the internet, allowing it to be controlled from anywhere with a network connection.
+A specific goal is to allow this bot to be controlled via Twitch live-stream chat, yielding more participation during demos.
+
+Throughout construction, this project has been made as from-scratch as possible. This has included designing of circuitry, PCBs, and 3D printed parts, as well as bare-metal coding for drivers, communication, and interaction.
+
+This progress report will go over work done, project direction, and next steps.
+
+* DONE Software Development
+# At this point you must have acquired and installed all the software needed and should have made some progress in developing the code needed.
+
+Software work done so far can be sectioned into two areas: OS/Systemd and Twitch. While this progress report will only give a brief overview, specifics will be provided in a final report.
+
+** DONE OS and Systemd
+
+In order to link external hardware (camera, microphone, speaker, etc) with other software being written, we needed both an OS and drivers. We chose stock Raspbian light as a starting point, due to its exhaustive support for our Raspberry Pi 3 A+, then wrote some systemd modules to interface with our external components. The camera was dead-simple to get working great, as the =raspivid= package is built in and very fast. The speaker amplifier and microphone were a bit harder to set up. Interfacing over I2C, these parts should theoretically work with minor setup, but we ran into some UDEV issues. At this point, I2S devices are working great, with the caveat of needing to be ran with root privileges -- for some reason.
+
+** DONE Twitch Bot
+
+With the environment set up, work could begin on interfacing with Twitch. It was decided that a Twitch bot would be written from scratch in Rust -- the [[https://crates.io/crates/twitchchat][twitchchat]] crate was eventually decided on. The source code for the current iteration of the bot can be found on [[https://github.com/Shizcow/BooBot/tree/master/src/twitch][GitHub]]. After a significant amount of work was completed, the bot went online with no issues.
+
+During development, the authors discovered [[https://github.com/festvox/flite][Flite]], an open-source offline-only terminal-based text to speech engine. Surprisingly, it could be dropped right in to the twitch bot with zero issues, taking in =!say= commands from Twitch chat and playing synthesized speech straight out of the I2S speaker.
+
+Below are two screenshots: one of Twitch chat and the other of terminal output running on the Pi. This shows the bot joining a Twitch chat and accepting commands from another user. While the movement commands are yet to be implemented, =!say= and various information commands are complete.
+
+#+ATTR_LATEX: :height 6cm :center t
+[[./twitch_browser.png]]
+
+#+ATTR_LATEX: :width 0.8\textwidth :center t
+[[./twitch_terminal.png]]
+
+** DONE Next Steps
+
+Once hardware development is complete, the movement commands can be implemented. After this, we aim to address the previously mentioned UDEV issues. At that point, auxiliary peripherals may be programmed for -- as much as time may allow.
+
 * TODO Hardware Development
-  # At this point you must have acquired and installed all the software needed and should have made some progress in developing the code needed.
-  # Provide Hardware proof of purchase
+# At this point you must have acquired and installed all the software needed and should have made some progress in developing the code needed.
+# Provide Hardware proof of purchase
 
-  [[./CircuitDiagram.png]]
+[[./CircuitDiagram.png]]
 
-  [[./PCBDiagram.png]]
-  
-  [[./PCB.png]]
+[[./PCBDiagram.png]]
+
+[[./PCB.png]]
 
 * TODO Curret Status
   # The report will describe the status of the project.
