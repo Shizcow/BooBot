@@ -100,11 +100,20 @@ Once hardware development is complete, the movement commands can be implemented.
 * TODO Curret Status
   # The report will describe the status of the project.
 * TODO Attributes to Evaluate
-  # You should also mention which attribute of your project you propose to evaluate:
-  #  - Limitations like resolution, accuracy or response time
-  #  - Cost and marketability of a device based on your project
-* TODO Analysis, Data, Experiments
-  # Your evaluation must be based on some hard data/analysis/experiments.
+# You should also mention which attribute of your project you propose to evaluate:
+#  - Limitations like resolution, accuracy or response time
+#  - Cost and marketability of a device based on your project
+
+For this project, we have chosen to evaluate the /limitations/ and /cost/ attributes.
+This section will give an overview and analysis of each in turn.
+
+** TODO Limitations
+
+Both the current test stages and the envisioned final product of this project will have significant limitations.
+The first is in processing power. As this device is meant to be small, relatively low-cost, and passively cooled, the Raspberry Pi 3 A+ is one of a few great choices here. And while it is more than able to meet the base requirements (video processing, interfacing with peripherals, network communication) expandability is rather low. As such, far-future stretch goals such as fully autonomous driving, peer-to-peer swarm communication, and full server hosting may not be attainable without significant engineering. A second limitation is in the choice of hosting. The current iteration of the project uses Twitch for controlling the bot over long distances. While this is a relatively easy solution to execute, Twitch struggles with low-latency streaming. As such, although the bot is able to push video feed with very low latency, Twitch is bottlenecking the stream delay. During testing, we measured this delay to be between 3 and 7 seconds. Another limitation of Twitch streaming is resolution and bit-rate. While the bot can just reach 60fps 1080p streams, Twitch throttles incoming connections to specific resolutions, bitrates, and framerates. After some testing, we Twitch would only display what is (after bitrate compression) approximately 720p at a locked 24fps. Future iterations of this design using custom streaming servers may be able to overcome all the limitations we have been experiencing with Twitch.
+
+** TODO Cost
+
 * DONE Members
 Members of this project are as follows:
 - Daniel Garcia
