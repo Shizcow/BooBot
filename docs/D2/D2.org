@@ -53,6 +53,13 @@
 * TODO Hardware Development
   # At this point you must have acquired and installed all the software needed and should have made some progress in developing the code needed.
   # Provide Hardware proof of purchase
+
+  ./CircuitDiagram.png
+
+  ./PCBDiagram.png
+  
+  ./PCB.png
+
 * TODO Curret Status
   # The report will describe the status of the project.
 * TODO Attributes to Evaluate
@@ -66,7 +73,7 @@ Members of this project are as follows:
 - Daniel Garcia
 - Devin Pohl
   
-* TODO Bill of Materials
+* DONE Bill of Materials
 Below is a bill of materials for this project, including all hardware used.
 All components are purchased from various EBay stores, with shipping times between one and three weeks.
 
@@ -91,8 +98,9 @@ All components are purchased from various EBay stores, with shipping times betwe
 |      1 | Display           |         2.95 | 0.96" I2C OLED Display                                   |     2.95 |
 |      1 | SD Card           |         5.00 | 32 GB Class 10 Micro SD Card                             |     5.00 |
 |      1 | PLA Filament      |         5.00 | 100g Black PLA filament 1.75 mm                          |     5.00 |
+|      1 | PCB               |         8.00 | 5 Custom PCBs from EASY EDA                              |     8.00 |
 |--------+-------------------+--------------+----------------------------------------------------------+----------|
-|        |                   |              | Total:                                                   |    99.30 |
+|        |                   |              | Total:                                                   |    107.3 |
 #+TBLFM: @>$>=vsum(@<<..@>>)
 
 #+latex: \normalsize
