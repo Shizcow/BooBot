@@ -91,11 +91,26 @@ Once hardware development is complete, the movement commands can be implemented.
 # At this point you must have acquired and installed all the software needed and should have made some progress in developing the code needed.
 # Provide Hardware proof of purchase
 
+Hardware work done so far can be sectioned into two areas: Electronics/PCB and Case. While this report progress will only give a brief overview, specifics will be provided in the final report.
+ 
+** Electronics and PCB
+
+To connect all the sensors and actuators effectively, a PCB was designed to fit all the electronic components and reduce wiring. Designing a custom PCB makes the circuitry manageable, prevents wiring errors, makes the design compact and manageable. We decided to use the EasyEDA PCB design software due to previous experience with the software. Making the connections was very simple since most of the diagrams were provided in their respective datasheets. Below, a screenshot provides the connection diagram.  
+
 [[./CircuitDiagram.png]]
+
+ Soon after completing the design, the PCB was digitally wired. This process took longer than expected due to issues confirming I2S pins. After the I2S pins were confirmed, we proceeded to complete the missing connections and starting searching for design flaws. A few minor flaws were encountered and resolved. The following image is a screenshot of the final PCB layout. 
 
 [[./PCBDiagram.png]]
 
+Once satisfied with the design, the file was sent to a manufacturer. We decided to go for JLCPCB for manufacturing due to previous positive experiences with the company and low prices. As of right now, the PCBs have been approved, manufactured, and shipped. We are currently waiting for delivery. The following screenshots are a preview of the PCBs.
+
 [[./PCB.png]]
+
+We are expecting the PCBs to arrive within the next week. Once delivered, we will proceed to solder and test the final results.
+
+** Case
+
 
 [[./Unassembled.png]]
 
