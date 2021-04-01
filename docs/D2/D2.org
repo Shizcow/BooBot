@@ -96,6 +96,14 @@ Once hardware development is complete, the movement commands can be implemented.
 [[./PCBDiagram.png]]
 
 [[./PCB.png]]
+
+[[./Unassembled.png]]
+
+[[./Assembled.png]]
+
+[[./Assembled2.png]]
+
+
 * TODO Attributes to Evaluate
 # You should also mention which attribute of your project you propose to evaluate:
 #  - Limitations like resolution, accuracy or response time
