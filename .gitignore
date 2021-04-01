@@ -4,3 +4,4 @@
 **/*.sagetex.sage
 **/target
 **/Cargo.lock
+**/*.bbl
