@@ -87,7 +87,7 @@ Below are two screenshots: one of Twitch chat and the other of terminal output r
 
 Once hardware development is complete, the movement commands can be implemented. After this, we aim to address the previously mentioned UDEV issues. At that point, auxiliary peripherals may be programmed for -- as much as time may allow.
 
-* TODO Hardware Development
+* DONE Hardware Development
 # At this point you must have acquired and installed all the software needed and should have made some progress in developing the code needed.
 # Provide Hardware proof of purchase
 
@@ -126,7 +126,7 @@ The following screenshots shows a preview of the design.
 
 Once the design was done, some of the parts were printed to test the dimensions. Currently, we are still printing a few pieces to accommodate updates in the PCB and designs in issues with measurements. Overall, the current renders show a close resemblance to the final product.
 
-* TODO Attributes to Evaluate
+* DONE Attributes to Evaluate
 # You should also mention which attribute of your project you propose to evaluate:
 #  - Limitations like resolution, accuracy or response time
 #  - Cost and marketability of a device based on your project
@@ -141,10 +141,17 @@ The first is in processing power. As this device is meant to be small, relativel
 
 A second limitation is in the choice of hosting. The current iteration of the project uses Twitch for controlling the bot over long distances. While this is a relatively easy solution to execute, Twitch struggles with low-latency streaming. As such, although the bot is able to push video feed with very low latency, Twitch is bottlenecking the stream delay. During testing, we measured this delay to be between 3 and 7 seconds.
 
-Another limitation of Twitch streaming is resolution and bit-rate. While the bot can just reach 60fps 1080p streams, Twitch throttles incoming connections to specific resolutions, bitrates, and framerates. After some testing, we Twitch would only display what is (after bitrate compression) approximately 720p at a locked 24fps. Future iterations of this design using custom streaming servers may be able to overcome all the limitations we have been experiencing with Twitch.
+Another limitation of Twitch streaming is resolution and bit-rate. While the bot can just reach 60fps 1080p streams, Twitch throttles incoming connections to specific resolutions, bitrates, and framerates. After some testing, Twitch would only display what is (after bitrate compression) approximately 720p at a locked 24fps. Future iterations of this design using custom streaming servers may be able to overcome all the limitations we have been experiencing with Twitch.
 
-** TODO Cost
-  
+** DONE Cost
+ 
+After looking at the total price, the device may seem expensive at around 110 USD but can get reduced. If decided to be done on a larger scale, the final total could be well under 70 dollars. This lower price can be explained through the following points:
+ - Components: Many of these components were purchased individually. Purchasing in smaller quantities increases the price drastically. If components are purchased in higher quantities, prices can be decreased. 
+ - Different components: Some components are also good candidates to be replaced with cheaper and higher quality ones. Because of time constraints, we used popular components. Due to the popularity these components had high demand, there were quite pricey. 
+ - Lack of time: Because of this, some devices like the raspberry pi could have been integrated directly into the PCB, and thus reduce its price significantly. 
+
+Another component of the device is marketability. Due to the modular port underneath the device, it can serve a wide range of people. The modular port can be connected to other devices and increase its functionality. Some examples can be a robot sweeper, mopper, surveillance, long-distance calls, etc.
+
 * DONE Bill of Materials
 Below is a bill of materials for this project, including all hardware used.
 All components are purchased from various EBay stores, with shipping times between one and three weeks.
