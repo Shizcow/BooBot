@@ -111,13 +111,20 @@ We are expecting the PCBs to arrive within the next week. Once delivered, we wil
 
 ** Case
 
+The project requires an enclosure to fit all the components. Because of this, we designed a case using AutoCAD. For this, all components such as motors, batteries, and buttons were measured and replicated into this software. In the meantime, the PCB was also under design. Because of this, the case was being designed at the same time to fit new spacing needs. The robot case was designed into three levels which are further discussed below.
 
+- Electromechanical, and power supply (Bottom layer): This level holds the stepper motors, batteries, caster, charging port, and wheels. The batteries were also placed at this level to lower its center of mass and increase stability.
+- Electronics (Middle Layer): This layer holds all the fragile electronics. This layer is separated from the motors and the batteries. This was done as a protection EMF and increase the distance from the motors. The microphone and speakers are also in this layer, this also is an attempt to reduce the noise from the motors.
+- Camera (Top Layer): This layer contains the camera, the display, and the servo only. This was done to avoid wire tangling while also providing a cleaner look. This layer also holds the clear plastic dome that encapsulates the device while also making it easy to view around.  
+
+The following screenshots shows a preview of the design. 
 [[./Unassembled.png]]
 
 [[./Assembled.png]]
 
 [[./Assembled2.png]]
 
+Once the design was done, some of the parts were printed to test the dimensions. Currently, we are still printing a few pieces to accommodate updates in the PCB and designs in issues with measurements. Overall, the current renders show a close resemblance to the final product.
 
 * TODO Attributes to Evaluate
 # You should also mention which attribute of your project you propose to evaluate:
