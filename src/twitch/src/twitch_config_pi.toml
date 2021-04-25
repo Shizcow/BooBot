@@ -1,0 +1,7 @@
+[connection]
+channel = "shizcow"
+user = "shizcow"
+key_command = "cat ~/totally_secure_directory/stream_key"
+
+[permissions]
+admins = ["shizcow"]

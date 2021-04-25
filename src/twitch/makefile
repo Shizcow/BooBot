@@ -18,4 +18,4 @@ clean:
 	cargo clean
 
 upload: target/$(TARGET_ARCH)/release/twitch
-	tar cf - target/$(TARGET_ARCH)/release/twitch src/twitch_config.toml | ssh pi@$(PI_IP) "sh -c 'D=\`mktemp -d\`; tar xf - -C \$$D; \$$D/target/$(TARGET_ARCH)/release/twitch -c \$$D/src/twitch_config.toml'"
+	tar cf - target/$(TARGET_ARCH)/release/twitch src/twitch_config_pi.toml | ssh pi@$(PI_IP) "sh -c 'D=\`mktemp -d\`; tar xf - -C \$$D; \$$D/target/$(TARGET_ARCH)/release/twitch -c \$$D/src/twitch_config_pi.toml'"
