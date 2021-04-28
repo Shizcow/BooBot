@@ -52,6 +52,16 @@
     Email: \href{mailto:daniel95@rams.colostate.edu}{daniel95@rams.colostate.edu}}}
 #+end_src
 
+*** MISC Latex Formatting                                          :ignore:
+**** Fix Formatting for Long Links in References                  :ignore:
+#+LaTeX_HEADER: \def\UrlBreaks{\do\/\do-}
+
+**** Tables                                                       :ignore:
+# Provides a P{width} tabular environment
+#+LaTeX_HEADER: \usepackage{array}
+#+LaTeX_HEADER: \newcolumntype{P}[1]{>{\centering\arraybackslash}p{#1}}
+
+
 * General Notes                                                      :ignore:
 #+begin_comment
 The final report that you will submit will be a complete documentation of your project. In addition, the
@@ -70,6 +80,7 @@ This is test writing to get the formatting right
 #+begin_comment
 wee
 #+end_comment
+This is a test for citation cite:pohl-2021-shizc-boobot to see it working.
 * TODO Problem Characterization
 #+begin_comment
 This is a technical description of the problem. Your audience is
@@ -82,4 +93,7 @@ Include i. Methodology and ii. a description of the libraries that you have used
 ** TODO Methodology
 ** TODO Software
 * TODO Conclusions
-* TODO Bibliography
+* TODO Bibliography :ignore:
+# org-mode headings >>> whatever natbib does
+bibliographystyle:IEEEtranS
+bibliography:references.bib
