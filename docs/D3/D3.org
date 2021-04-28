@@ -1,0 +1,83 @@
+#+title: Final Report: Boo-Bot
+# #+author: Devin Pohl
+# #+author: Daniel Garcia
+#+date: 4/30/2021
+#+description: Semester Project: midway report on current progress
+
+# This whole section is setup for org-mode formatting; no content here
+* Org Preamble                                                       :ignore:
+** Org Options                                                      :ignore:
+# Do not export table of contents
+# Use smart quotes
+# Do not export TODO/progress tracking
+#+options: toc:nil ':t todo:nil
+
+** Tangle Hacks                                                     :ignore:
+# This document needs some auto tangling
+
+#+NAME: tangle-it
+#+BEGIN_SRC emacs-lisp :exports none
+  (org-babel-tangle)
+#+END_SRC
+#+BEGIN_SRC text :results silent :noweb yes :exports results
+  <<tangle-it()>>
+#+END_SRC
+
+** Latex Class + IEEE Compliance                                    :ignore:
+# https://github.com/Shizcow/dotfiles/blob/master/emacs/conf.org#general-config
+#+latex_class: IEEE
+#+latex_class_options: [10pt, final, conference]
+
+*** Author + Affiliations                                          :ignore:
+# IEEEtrans requires some special attention to author formatting to get affiliations right
+# Need to drop down to latex AND get this into header so this needs a little bit
+#   of babel magic. Auto tangle managed by [[Tangle Hacks]] section
+
+#+latex_header: \usepackage{authorhacks}
+
+#+name: authorhacks
+#+begin_src latex :tangle authorhacks.sty :exports none
+\author{\IEEEauthorblockN{Devin Pohl}
+  \IEEEauthorblockA{
+    College of Engineering\\
+    Department of Electrical and Computer Engineering\\
+    Colorado State University\\
+    Email: \href{mailto:Devin.Pohl@colostate.edu}{Devin.Pohl@colostate.edu}}
+  \and
+  \IEEEauthorblockN{Daniel Garcia}
+  \IEEEauthorblockA{
+    College of Natural Sciences\\
+    Department of Computer Science\\
+    Colorado State University\\
+    Email: \href{mailto:daniel95@rams.colostate.edu}{daniel95@rams.colostate.edu}}}
+#+end_src
+
+* General Notes                                                      :ignore:
+#+begin_comment
+The final report that you will submit will be a complete documentation of your project. In addition, the
+code developed will also need to be submitted.
+This report should be between 1500-2500 words excluding references. The report must include several
+elements, each of which will be a separate section. These are already outlined in this document.
+#+end_comment
+* TODO Abstract
+#+begin_comment
+Compact one-paragraph overview of the project
+#+end_comment
+This is test writing to get the formatting right
+* TODO Introduction
+#+begin_comment
+wee
+#+end_comment
+* TODO Problem Characterization
+#+begin_comment
+This is a technical description of the problem. Your audience is
+your peers so present it in a way that they can appreciate.
+#+end_comment
+* TODO Proposed Solution and Implementation Strategy
+#+begin_comment
+Include i. Methodology and ii. a description of the libraries that you have used and what you did on your own.
+#+end_comment
+** TODO Methodology
+** TODO Software
+* TODO Conclusions
+* TODO Bibliography
