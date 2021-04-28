@@ -59,11 +59,13 @@ code developed will also need to be submitted.
 This report should be between 1500-2500 words excluding references. The report must include several
 elements, each of which will be a separate section. These are already outlined in this document.
 #+end_comment
-* TODO Abstract
+* TODO Abstract                                                      :ignore:
 #+begin_comment
 Compact one-paragraph overview of the project
 #+end_comment
+#+begin_abstract
 This is test writing to get the formatting right
+#+end_abstract
 * TODO Introduction
 #+begin_comment
 wee
