@@ -141,7 +141,12 @@ Actually including:
 - Software
 - Hardware
 #+end_comment
-** TODO Methodology
+
+This is a project with an abundance of moving parts.
+Most importantly is that both software and hardware have a large amount of notable developments.
+As such, this section will include a description of work done on hardware: first explaining the various pre-built tools utilized in this project, then the original work on software, and finally the original work on hardware.
+
+** DONE Methodology
 #+begin_comment
 Talk about:
 - GitHub repo
@@ -160,12 +165,38 @@ We also included a speaker amplifier, microphone, and several miscellaneous sens
 For a complete list of hardware, including sensors, electrical components, and material, see [[Bill of Materials][Appendix A]].
 All hardware in this list has been successfully integrated into the current prototype.
 
-** TODO Software
+The software side of this project uses a large amount of pre-built solutions, the largest of which being the operating system.
+Running on the Raspberry Pi 3 A+ is Raspbian Lite with a few modifications.
+These modifications are in the form of SPI-interfacing systemd modules, used to drive the microphone cite:unknown-2017-overv-adafr and speaker amplifier cite:unknown-2016-overv-adafr.
+Several shell-based programs are used in the current ecosystem as well:
+- raspivid cite:unknown-2020-raspivid-github: Used to read video data from the standard Raspberry Pi camera.
+- ffmpeg cite:ffmpeg-2021-ffmpeg-ffmpeg: Used to process video and stream to Twitch.
+- Flite cite:black-2018-flite-github: Used for text-to-speech. Allows the bot to read Twitch chat out-loud.
+All other software is written from scratch, using the Rust programming language.
+Source code, explained further in [[Software]], is hosted on GitHub cite:pohl-2021-shizc-boobot.
+
+Hardware development can be seperated into two main categories: CAD and PCB.
+The CAD development culminated in the 3D printed chassis; parts were developed in AutoCAD and printed on Prusa i3 MK3S+ 3D printers.
+PCB development was done in EasyEDA, culminating in a custom hat for the Raspberry Pi to interface and power all peripherals.
+All aspects of hardware development are explained below.
+
+** DONE Software
+
+For this prototype, a git repository was set up, hosted on GitHub cite:pohl-2021-shizc-boobot.
+This repository holds all code written for this project, as well as all documentation.
+The main implementation language is Rust, which occasionally uses OS calls to spawn the shell-based programs described above.
+The only notable crate (Rust's term for a library) used is twitchchat cite:ree-2021-github.
+It is essentially an IRC client implementation with Twitch-specific features -- Twitch chat is a /very/ non-standard IRC.
+Additional minor crates can be found at the GitHub repository cite:pohl-2021-shizc-boobot.
+All other code simply leverages the Rust standard library; this includes code for GPIO manipulation, process spawning, shell interaction, configuration reading, and connection to Twitch.
+Essentially the main program reads from a configuration file, connects to Twitch, and dispatches commands such as moving motors via GPIO, calling Flite for text-to-speech, and relaying system info back to chat.
+Additionally, admin controls were implemented to allow for fine-grain control over what users are allowed to run what commands in chat at what times.
+
 ** TODO Hardware
 * TODO Conclusions
 * DONE Bibliography                                                  :ignore:
 # cite generates its own (correct) references heading, hence the :ignore:
-bibliographystyle:IEEEtranS
+bibliographystyle:IEEEtran
 bibliography:references.bib
 
 #+latex: \appendices
