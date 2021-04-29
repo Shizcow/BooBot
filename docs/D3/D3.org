@@ -58,7 +58,6 @@
 #+LaTeX_HEADER: \usepackage{array}
 #+LaTeX_HEADER: \newcolumntype{P}[1]{>{\centering\arraybackslash}p{#1}}
 
-
 * General Notes                                                      :ignore:
 #+begin_comment
 The final report that you will submit will be a complete documentation of your project. In addition, the
@@ -97,6 +96,8 @@ It is made to answer the lack of a cheap, commercially available, semi-autonomou
 Despite the numerous challenges encountered during development, the final product is considered a successful implementation, providing significant learning experiences for the authors.
 In design and construction, the device provided key insights into areas of robotics, circuitry, and of course, operating systems.
 This paper provides an overview on why this project exists, the process of its design, and how that design was implemented.
+And while this paper presents a completed prototype, it is just that: a prototype.
+Additional development will be done in the future.
 
 There are two main areas of development in this project: hardware and software.
 The first area, hardware, took the most time.
@@ -134,8 +135,31 @@ These will be discussed in further sections of this paper.
 * TODO Proposed Solution and Implementation Strategy
 #+begin_comment
 Include i. Methodology and ii. a description of the libraries that you have used and what you did on your own.
+
+Actually including:
+- Methodology
+- Software
+- Hardware
 #+end_comment
 ** TODO Methodology
+#+begin_comment
+Talk about:
+- GitHub repo
+- Rust
+- RPI
+- Hardware shit
+#+end_comment
+
+Due to the scope of this project, a large amount of existing solutions were used.
+This includes development tools for both hardware and software.
+On the hardware side is the development board and peripherals.
+The board we chose for the task is a Raspberry Pi 3 A+, decided on due to its low cost, abundance of ports, and vast community support.
+While we initially planned on using stepper motors, the output torque of the motors we chose was too low.
+This resulted in us using standard DC motors for a first prototype that were on hand; we will return to stepper motors in further iterations of this project in the future.
+We also included a speaker amplifier, microphone, and several miscellaneous sensors.
+For a complete list of hardware, including sensors, electrical components, and material, see [[Bill of Materials][Appendix A]].
+All hardware in this list has been successfully integrated into the current prototype.
+
 ** TODO Software
 ** TODO Hardware
 * TODO Conclusions
@@ -143,3 +167,37 @@ Include i. Methodology and ii. a description of the libraries that you have used
 # cite generates its own (correct) references heading, hence the :ignore:
 bibliographystyle:IEEEtranS
 bibliography:references.bib
+
+#+latex: \appendices
+* TODO Bill of Materials
+# TODO: format this so it doesn't look like shit in twocolumn
+Below is a bill of materials for this project, including all hardware used.
+All hardware present has been successfully integrated into the current iteration of the prototype.
+
+#+begin_center
+#+latex: \footnotesize
+#+latex: \renewcommand{\arraystretch}{1.7}
+#+ATTR_LATEX: :align r|lr|p{6.5cm}|r
+| Amount | Component         | Price Ea ($) | Description                                              | Cost ($) |
+|--------+-------------------+--------------+----------------------------------------------------------+----------|
+|     10 | Capacitors        |        0.466 | 16v 1000UF Electrolitic SMD                              |     4.66 |
+|      2 | Drivers           |         7.82 | 39-1500RPM DC 6V Electric Motor with Gear Box            |    15.64 |
+|      2 | Motors            |         3.98 | MINEBEA NMB 2-phase 4-Wire 18\textdegree{} Stepper Motor |     7.96 |
+|      1 | 9-axis MPU        |         4.60 | MPU9250 (Gyro, Accelerometer, Compass)                   |     4.60 |
+|      1 | ADC               |         1.69 | INA219  DC current and voltage sensor                    |     1.69 |
+|      1 | Amp               |         4.99 | MAX98357A I2S Class D amplifier                          |     4.99 |
+|      1 | Lipo              |        15.05 | Lipo battery pack                                        |    15.05 |
+|      1 | Microphone        |         7.51 | I2S MEMS Microphone SPH0645LM4H                          |     7.51 |
+|      1 | PCB               |         8.00 | 5 Custom PCBs from EASY EDA                              |     8.00 |
+|      1 | PLA Filament      |         5.00 | 100g Black PLA filament 1.75 mm                          |     5.00 |
+|      1 | Raspberry pi      |        29.99 | Raspberry Pi 3 Model A+ 2018 model                       |    29.99 |
+|      1 | SD Card           |         5.00 | 32 GB Class 10 Micro SD Card                             |     5.00 |
+|      1 | Servo             |         1.79 | SG90 9G Micro Servo Motor                                |     1.79 |
+|      1 | Speaker           |         0.99 | 8 ohm speaker                                            |     0.99 |
+|      1 | Voltage Regulator |         0.79 | B628 3-24V to 12V 2A Adjustable Boost Step-Up Converter  |     0.79 |
+|--------+-------------------+--------------+----------------------------------------------------------+----------|
+|        |                   |              | Total:                                                   |   113.66 |
+#+TBLFM: @>$>='(format "%.2f" (apply '+ '(@<<..@>>)));N::@<<$>..@>>$>='(format "%.2f" (* $< $<<<));N
+
+#+latex: \normalsize
+#+end_center
