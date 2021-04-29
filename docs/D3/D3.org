@@ -105,13 +105,31 @@ The second area, software, was not without its developments.
 With components including GPIO interfacing, IRC communication, video streaming, and operating system interfacing, a healthy mix of written-from-scratch software, libraries, and complete pre-existing software was employed.
 Adding that all the software written requires non-trivial cross-compilation, several learning opportunities presented themselves.
 
-* TODO Problem Characterization
+* DONE Problem Characterization
 #+begin_comment
 This is a technical description of the problem. Your audience is
 your peers so present it in a way that they can appreciate.
 #+end_comment
 
+The need for this project was born from a simple desire to experience a remote place.
+While photos and videos provide a good approximation, they lack integration.
+Virtual reality, while a great solution, is prohibitively expensive and lacks any sort of real-time factor.
+The solution, of course, is a remote controlled robot.
+However, long-distance remote controlled robots are few and far between in commercial spaces and often unable to provide a reasonable price tag.
+Designing and implementing this robot in-house is the clear solution.
 
+With the end-goal in mind, specific objectives and constraints were then drafted.
+After careful consideration, we decided on the following set of items:
+- Low cost: The target was $150 for a prototype unit.
+- Small size: To ensure portability, low power consumption, and a more satisfying end product.
+- Cleanliness: We wanted this to be done right. This required a custom PCB to improve cable management.
+- Many peripherals: With a slew of sensors, motors, and other devices planned, this required a competent development board.
+- High quality software: This decision lead us to the Rust programming language.
+- Potential for future work: Required significant focus on easily installing and upgrading parts down the line when more development occurs.
+- Low work duplication: Not wanting to completely re-invent the wheel, we wanted to use a popular ecosystem with plenty of community development.
+
+With the problem described and a list of goals outlined, specific design decisions could be made.
+These will be discussed in further sections of this paper.
 
 * TODO Proposed Solution and Implementation Strategy
 #+begin_comment
