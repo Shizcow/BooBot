@@ -18,4 +18,12 @@ clean:
 	cargo clean
 
 upload: target/$(TARGET_ARCH)/release/twitch
-	tar cf - target/$(TARGET_ARCH)/release/twitch src/twitch_config_pi.toml | ssh pi@$(PI_IP) "sh -c 'D=\`mktemp -d\`; tar xf - -C \$$D; \$$D/target/$(TARGET_ARCH)/release/twitch -c \$$D/src/twitch_config_pi.toml'"
+	tar cf - target/$(TARGET_ARCH)/release/twitch src/twitch_config_pi.toml | ssh pi@$(PI_IP) "sh -c 'D=\`mktemp -d\`; tar xf - -C \$$D; sudo \$$D/target/$(TARGET_ARCH)/release/twitch -c \$$D/src/twitch_config_pi.toml'"
+
+
+# HBRIDGE REEEEEEEEEEEEEE
+# Motor 1: 17, 25
+# Motor 2: 8, 7
+
+# Speaker enable: 27
+# gpio 13: servo

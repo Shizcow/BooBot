@@ -6,6 +6,8 @@ use config::*;
 
 use clap::{App, Arg};
 
+use std::sync::Mutex;
+
 static IS_ADMIN_ONLY: AtomicBool = AtomicBool::new(false);
 
 macro_rules! always_admin {
@@ -30,6 +32,69 @@ macro_rules! sometimes_admin {
     };
 }
 
+use rppal::gpio::{Gpio, OutputPin};
+
+struct MotorGPIOs {
+    left_hbridge_left: OutputPin,
+    left_hbridge_right: OutputPin,
+    right_hbridge_left: OutputPin,
+    right_hbridge_right: OutputPin,
+}
+
+impl MotorGPIOs {
+    fn new(
+        left_hbridge_left: u8,
+        left_hbridge_right: u8,
+        right_hbridge_left: u8,
+        right_hbridge_right: u8,
+    ) -> Result<Self, rppal::gpio::Error> {
+        Ok(MotorGPIOs {
+            left_hbridge_left: Gpio::new()?.get(left_hbridge_left)?.into_output(),
+            left_hbridge_right: Gpio::new()?.get(left_hbridge_right)?.into_output(),
+            right_hbridge_left: Gpio::new()?.get(right_hbridge_left)?.into_output(),
+            right_hbridge_right: Gpio::new()?.get(right_hbridge_right)?.into_output(),
+        })
+    }
+
+    fn dispatch_move(&mut self, d: Direction) {
+        println!("moving: {:?}", d);
+
+        self.left_hbridge_left.set_low();
+        self.left_hbridge_right.set_low();
+        self.right_hbridge_left.set_low();
+        self.right_hbridge_right.set_low();
+
+        std::thread::sleep(std::time::Duration::from_millis(10)); // debounce
+
+        match &d {
+            Direction::Forward => [&mut self.left_hbridge_left, &mut self.right_hbridge_left],
+            Direction::Backward => [&mut self.left_hbridge_right, &mut self.right_hbridge_right],
+            Direction::Left => [&mut self.left_hbridge_right, &mut self.right_hbridge_left],
+            Direction::Right => [&mut self.left_hbridge_left, &mut self.right_hbridge_right],
+            _ => todo!(),
+        }
+        .iter_mut()
+        .for_each(|p| {
+            p.set_high();
+        });
+
+        std::thread::sleep(std::time::Duration::from_millis(match d {
+            Direction::Forward | Direction::Backward => 1000,
+            Direction::Left | Direction::Right => 300,
+            _ => todo!(),
+        }));
+
+        self.left_hbridge_left.set_low();
+        self.left_hbridge_right.set_low();
+        self.right_hbridge_left.set_low();
+        self.right_hbridge_right.set_low();
+    }
+}
+
+lazy_static::lazy_static! {
+    static ref MGPIO: Mutex<MotorGPIOs> = Mutex::new(MotorGPIOs::new(17, 25, 8, 7).expect("Could not bind to gpio!"));
+}
+
 #[derive(PartialEq, Debug)]
 enum Direction {
     Forward,
@@ -40,12 +105,12 @@ enum Direction {
     Down,
 }
 
-fn dispatch_move(d: Direction) {
-    println!("moving: {:?}", d);
-}
+fn setup_move() {}
 
 fn main() -> anyhow::Result<()> {
     let start = std::time::Instant::now();
+
+    setup_move();
 
     let matches = App::new("Twitch BooBot")
         .arg(
@@ -118,37 +183,37 @@ fn main() -> anyhow::Result<()> {
         &["f", "forward"],
         |chat, _, privilege| {
 	    sometimes_admin!(privilege, chat);
-	    dispatch_move(Direction::Forward);
+	    MGPIO.lock().unwrap().dispatch_move(Direction::Forward);
         },
     ).with_command(
         &["b", "backward"],
         |chat, _, privilege| {
 	    sometimes_admin!(privilege, chat);
-	    dispatch_move(Direction::Backward);
+	    MGPIO.lock().unwrap().dispatch_move(Direction::Backward);
         },
     ).with_command(
         &["l", "left"],
         |chat, _, privilege| {
 	    sometimes_admin!(privilege, chat);
-	    dispatch_move(Direction::Left);
+	    MGPIO.lock().unwrap().dispatch_move(Direction::Left);
         },
     ).with_command(
         &["r", "right"],
         |chat, _, privilege| {
 	    sometimes_admin!(privilege, chat);
-	    dispatch_move(Direction::Right);
+	    MGPIO.lock().unwrap().dispatch_move(Direction::Right);
         },
     ).with_command(
         &["u", "up"],
         |chat, _, privilege| {
 	    sometimes_admin!(privilege, chat);
-	    dispatch_move(Direction::Up);
+	    MGPIO.lock().unwrap().dispatch_move(Direction::Up);
         },
     ).with_command(
         &["d", "down"],
         |chat, _, privilege| {
 	    sometimes_admin!(privilege, chat);
-	    dispatch_move(Direction::Down);
+	    MGPIO.lock().unwrap().dispatch_move(Direction::Down);
         },
     ).with_command(
         &["say"],
