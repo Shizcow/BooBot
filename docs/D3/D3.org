@@ -193,7 +193,18 @@ Essentially the main program reads from a configuration file, connects to Twitch
 Additionally, admin controls were implemented to allow for fine-grain control over what users are allowed to run what commands in chat at what times.
 
 ** TODO Hardware
+
+This prototype uses a vast amount of sensors and actuators. Due to such complexities in hardware, a custom PCB was required to simplify the assembly process.
+The PCB was designed to fit as a hat on the pi for quick removal in development. The PCB design was done using EasyEDA and manufactured through JLCPCB.
+A major focus for the PCB design was compatibility. Design considerations were taken from component datasheets and standardized GPIO pins.
+This prototype is a very visual device. Therefore, careful consideration was employed in designing a visually appealing device.
+Excluding the translucent dome, all 3D parts were designed using AutoCAD. Reference dimensions when designing were taken from datasheets.
+For components lacking datasheets, measurements were done manually. Finally, once all parts were designed, 3D models were printed with a Prusa i3 MK3S+.
+
 * TODO Conclusions
+
+In conclusion, this project turned out to be a successful implementation of a highly portable IoT device. The learning experience in robotics, electronics, and operating systems was highly remarkable. This project inspired further implementations in the later planned iterations.
+
 * DONE Bibliography                                                  :ignore:
 # cite generates its own (correct) references heading, hence the :ignore:
 bibliographystyle:IEEEtran
