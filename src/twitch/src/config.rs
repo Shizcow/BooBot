@@ -94,12 +94,12 @@ impl Config {
                 )
                 .to_string()
             })
-            .unwrap_or(
+            .unwrap_or_else(|| {
                 self.stream
                     .rtmp
                     .clone()
-                    .expect("[stream] requires rtmp or rtmp_command"),
-            )
+                    .expect("[stream] requires rtmp or rtmp_command")
+            })
     }
 }
 
@@ -121,7 +121,8 @@ impl ChatBot {
     pub fn with_video_streaming(self) -> Self {
         std::process::Command::new("sh")
             .args(&["-c", &self.stream_start_command])
-            .spawn().expect("Failed to start stream"); // have fun
+            .spawn()
+            .expect("Failed to start stream"); // have fun
         self
     }
     pub fn new_from_file(file: &str) -> anyhow::Result<Self> {
