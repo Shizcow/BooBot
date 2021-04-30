@@ -99,6 +99,7 @@ impl MotorGPIOs {
 
 lazy_static::lazy_static! {
     static ref MGPIO: Mutex<MotorGPIOs> = Mutex::new(MotorGPIOs::new(17, 25, 8, 7).expect("Could not bind to gpio!"));
+    static ref SGPIO: Mutex<OutputPin> = Mutex::new(Gpio::new().expect("Could not bind to gpio!").get(27).expect("Could not bind to gpio!").into_output());
 }
 
 #[derive(PartialEq, Debug)]
@@ -114,6 +115,9 @@ fn setup_move() {}
 
 fn main() -> anyhow::Result<()> {
     let start = std::time::Instant::now();
+
+    // speaker ON
+    SGPIO.lock().unwrap().set_high();
 
     setup_move();
 
