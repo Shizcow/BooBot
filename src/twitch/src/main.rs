@@ -56,7 +56,7 @@ impl MotorGPIOs {
         })
     }
 
-    fn dispatch_move(&mut self, d: Direction) {
+    fn dispatch_move(&mut self, d: Direction, forever: bool) {
         println!("moving: {:?}", d);
 
         self.left_hbridge_left.set_low();
@@ -66,28 +66,34 @@ impl MotorGPIOs {
 
         std::thread::sleep(std::time::Duration::from_millis(10)); // debounce
 
+        if d == Direction::Stop {
+            return;
+        }
+
         match &d {
             Direction::Forward => [&mut self.left_hbridge_left, &mut self.right_hbridge_left],
             Direction::Backward => [&mut self.left_hbridge_right, &mut self.right_hbridge_right],
             Direction::Left => [&mut self.left_hbridge_right, &mut self.right_hbridge_left],
             Direction::Right => [&mut self.left_hbridge_left, &mut self.right_hbridge_right],
-            _ => todo!(),
+            Direction::Stop => unimplemented!(),
         }
         .iter_mut()
         .for_each(|p| {
             p.set_high();
         });
 
-        std::thread::sleep(std::time::Duration::from_millis(match d {
-            Direction::Forward | Direction::Backward => 1000,
-            Direction::Left | Direction::Right => 300,
-            _ => todo!(),
-        }));
+        if !forever {
+            std::thread::sleep(std::time::Duration::from_millis(match d {
+                Direction::Forward | Direction::Backward => 1000,
+                Direction::Left | Direction::Right => 300,
+                Direction::Stop => unimplemented!(),
+            }));
 
-        self.left_hbridge_left.set_low();
-        self.left_hbridge_right.set_low();
-        self.right_hbridge_left.set_low();
-        self.right_hbridge_right.set_low();
+            self.left_hbridge_left.set_low();
+            self.left_hbridge_right.set_low();
+            self.right_hbridge_left.set_low();
+            self.right_hbridge_right.set_low();
+        }
     }
 }
 
@@ -101,8 +107,7 @@ enum Direction {
     Backward,
     Left,
     Right,
-    Up,
-    Down,
+    Stop,
 }
 
 fn setup_move() {}
@@ -181,39 +186,33 @@ fn main() -> anyhow::Result<()> {
         },
     ).with_command(
         &["f", "forward"],
-        |chat, _, privilege| {
+        |chat, args, privilege| {
 	    sometimes_admin!(privilege, chat);
-	    MGPIO.lock().unwrap().dispatch_move(Direction::Forward);
+	    MGPIO.lock().unwrap().dispatch_move(Direction::Forward, args.get(0) == Some(&"1"));
         },
     ).with_command(
         &["b", "backward"],
-        |chat, _, privilege| {
+        |chat, args, privilege| {
 	    sometimes_admin!(privilege, chat);
-	    MGPIO.lock().unwrap().dispatch_move(Direction::Backward);
+	    MGPIO.lock().unwrap().dispatch_move(Direction::Backward, args.get(0) == Some(&"1"));
         },
     ).with_command(
         &["l", "left"],
-        |chat, _, privilege| {
+        |chat, args, privilege| {
 	    sometimes_admin!(privilege, chat);
-	    MGPIO.lock().unwrap().dispatch_move(Direction::Left);
+	    MGPIO.lock().unwrap().dispatch_move(Direction::Left, args.get(0) == Some(&"1"));
         },
     ).with_command(
         &["r", "right"],
-        |chat, _, privilege| {
+        |chat, args, privilege| {
 	    sometimes_admin!(privilege, chat);
-	    MGPIO.lock().unwrap().dispatch_move(Direction::Right);
+	    MGPIO.lock().unwrap().dispatch_move(Direction::Right, args.get(0) == Some(&"1"));
         },
     ).with_command(
-        &["u", "up"],
+        &["s", "stop"],
         |chat, _, privilege| {
 	    sometimes_admin!(privilege, chat);
-	    MGPIO.lock().unwrap().dispatch_move(Direction::Up);
-        },
-    ).with_command(
-        &["d", "down"],
-        |chat, _, privilege| {
-	    sometimes_admin!(privilege, chat);
-	    MGPIO.lock().unwrap().dispatch_move(Direction::Down);
+	    MGPIO.lock().unwrap().dispatch_move(Direction::Stop, false);
         },
     ).with_command(
         &["say"],
