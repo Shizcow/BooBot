@@ -5,3 +5,7 @@ key_command = "cat /home/pi/totally_secure_directory/stream_key"
 
 [permissions]
 admins = ["shizcow"]
+
+[stream]
+command = "echo %s"
+rtmp_command = "cat /home/pi/totally_secure_directory/stream_url"

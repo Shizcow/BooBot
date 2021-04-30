@@ -134,6 +134,7 @@ fn main() -> anyhow::Result<()> {
         .get_matches();
 
     let bot = ChatBot::new_from_file(matches.value_of("config").unwrap())?
+    .with_video_streaming()
     .with_greeting("BooBot is online")
     .with_command(
         &["help"],

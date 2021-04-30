@@ -29,23 +29,36 @@ struct Permissions {
     admins: Vec<String>,
 }
 
+// This handles actually streaming video
+#[derive(Deserialize)]
+struct Stream {
+    command: String,
+    rtmp: Option<String>,
+    rtmp_command: Option<String>,
+}
+
 // And there's only one [connection]
 // This is really just to make serde happy
 #[derive(Deserialize)]
 struct Config {
     connection: Connection,
     permissions: Permissions,
+    stream: Stream,
 }
 
 impl Config {
     // convert into a ChatBot by grabbing the key from the system
     fn resolve(self) -> anyhow::Result<ChatBot> {
         let key = if self.connection.key.is_some() {
-            self.connection.key.unwrap()
+            self.connection.key.clone().unwrap()
         } else {
             self.get_key_password()?
         };
+
+        let rtmp = self.get_expanded_rtmp();
+        let stream_start_command = self.stream.command.replace("%s", &rtmp);
         Ok(ChatBot {
+            stream_start_command,
             channel: self.connection.channel,
             user: self.connection.user,
             key: key,
@@ -67,6 +80,27 @@ impl Config {
         )
         .into_owned())
     }
+    fn get_expanded_rtmp(&self) -> String {
+        self.stream
+            .rtmp_command
+            .as_ref()
+            .map(|c| {
+                String::from_utf8_lossy(
+                    &std::process::Command::new("sh")
+                        .args(&["-c", &c])
+                        .output()
+                        .expect("Shell command failed for rtmp_command")
+                        .stdout,
+                )
+                .to_string()
+            })
+            .unwrap_or(
+                self.stream
+                    .rtmp
+                    .clone()
+                    .expect("[stream] requires rtmp or rtmp_command"),
+            )
+    }
 }
 
 // the useful struct -- here `key` is in plaintext
@@ -75,6 +109,7 @@ pub struct ChatBot {
     channel: String,
     user: String,
     key: String,
+    stream_start_command: String,
     commands: HashMap<
         &'static [&'static str],
         Box<dyn Fn(Chat<'_, '_>, Vec<&str>, Privilege) + Send + Sync + 'static>,
@@ -83,6 +118,12 @@ pub struct ChatBot {
 }
 
 impl ChatBot {
+    pub fn with_video_streaming(self) -> Self {
+        std::process::Command::new("sh")
+            .args(&["-c", &self.stream_start_command])
+            .spawn().expect("Failed to start stream"); // have fun
+        self
+    }
     pub fn new_from_file(file: &str) -> anyhow::Result<Self> {
         toml::from_str::<Config>(&std::fs::read_to_string(file)?)?.resolve()
     }
