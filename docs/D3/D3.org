@@ -192,34 +192,110 @@ All other code simply leverages the Rust standard library; this includes code fo
 Essentially the main program reads from a configuration file, connects to Twitch, and dispatches commands such as moving motors via GPIO, calling Flite for text-to-speech, and relaying system info back to chat.
 Additionally, admin controls were implemented to allow for fine-grain control over what users are allowed to run what commands in chat at what times.
 
-** TODO Hardware
+The culmination of these efforts is a single program which can stream video to Twitch, interact with Twitch chat, and execute commands.
+A snapshot of this behavior can be seen in [Fig. ref:fig-chat].
+Here, the bot can be seen connecting to Twitch chat and accepting commands.
+An audience member can request information, make the bot move, or issue a phrase from the speech synthesis engine.
+At this point, all commands shown in [Fig. ref:fig-chat] do as they say: =!info= requests information, =!forward= and =!b= move the bot forward and backward respectively, =!say= evokes text to speech, and =!quit= (an admin-only command) shuts down the Twitch chat monitoring.
+
+#+CAPTION: Interactions with the bot in Twitch Chat label:fig-chat
+#+attr_latex: :width 0.33\textwidth
+[[file:./../D2/twitch_browser.png]]
+
+** DONE Hardware
 
 This prototype uses a vast amount of sensors and actuators. Due to such complexities in hardware, a custom PCB was required to simplify the assembly process.
-The PCB was designed to fit as a hat on the pi for quick removal in development. The PCB design was done using EasyEDA and manufactured through JLCPCB.
-A major focus for the PCB design was compatibility. Design considerations were taken from component datasheets and standardized GPIO pins.
-This prototype is a very visual device. Therefore, careful consideration was employed in designing a visually appealing device.
-Excluding the translucent dome, all 3D parts were designed using AutoCAD. Reference dimensions when designing were taken from datasheets.
-For components lacking datasheets, measurements were done manually. Finally, once all parts were designed, 3D models were printed with a Prusa i3 MK3S+.
+The PCB was designed to fit as a hat on the Raspberry PI for quick removal in development.
+The PCB design was done using EasyEDA and manufactured through JLCPCB.
+A major focus for the PCB design was compatibility.
+Design considerations were taken from component datasheets and standardized GPIO pins.
+Additionally, significant emphasis was placed on redundancy during design; this includes power supply bypasses and a semi-modular motor driver interface to facilitate unexpected swapping of motors (as we ended up utilizing).
+The current iteration of the PCB is rendered in [Fig. ref:fig-pcb].
 
-* TODO Conclusions
+#+CAPTION: 3D rendering of the PCB design label:fig-pcb
+#+attr_latex: :width 0.33\textwidth
+[[file:./../D2/PCB.png]]
 
-In conclusion, this project turned out to be a successful implementation of a highly portable IoT device. The learning experience in robotics, electronics, and operating systems was highly remarkable. This project inspired further implementations in the later planned iterations.
+This prototype is a very visual device.
+Therefore, careful consideration was employed in designing a visually appealing chassis.
+Excluding the translucent dome, all 3D parts were designed using AutoCAD.
+Reference dimensions when designing were taken from component data sheets.
+For components lacking datasheets, measurements were done manually.
+Finally, once all parts were designed, 3D models were printed with a Prusa i3 MK3S+.
+After the printing process, the bot could be assembled.
+The prototype, assembled as it is currently, can be seen in [Fig. ref:fig-proto].
+
+#+CAPTION: The finished prototype, assembled label:fig-proto
+#+attr_latex: :width 0.44\textwidth
+[[file:./proto.jpg]]
+
+* DONE Conclusions
+#+begin_comment
+What did we learn, and what experience did we gain?
+#+end_comment
+
+#+latex: \enlargethispage{-0.14in}
+
+** DONE Challenges
+Throughout development of the project, we ran into several problems.
+These problems required us to spend additional time researching, testing, and overall gaining valuable experiences in the debug process.
+
+One such challenge was creating a reproducible build chain.
+As the main code runs on an ARM-based processor, and as the development board has nowhere near the power to compile large programs on-board, cross compilation is required.
+Unfortunately, cross compiling Rust for the Raspberry Pi is a poorly documented task.
+While in the beginning a myriad of attempts were required to get even a simple binary built,
+over the course of development a robust pipeline emerged.
+Lessons learned from this encounter are to not be afraid of the official documentation.
+While easily accessible tutorials on websites may be dead-simple to follow, they may be out of date or incorrect.
+The only true up-to-date instructions are those derived from the source documentation.
+
+Another major challenge came in the form of making the speaker amplifier work correctly.
+As previously mentioned in this report, Aidafruit officially makes tutorials for the parts they sell available online.
+However, the tutorial for the speaker amplifier we decided to use did not produce the claimed results.
+While we were easily able to create the required circuits, the systemd modules seemed destined to silently fail.
+The solution involved manual editing of udev rules, systemd trigger files, and build configuration for the amplifier drivers.
+If not for prior experience on the parts of the authors, this objective is unlikely to have been met.
+
+Several additional challenges presented themselves while assembling and testing the circuit.
+The first of these was the severe lack of torque in the stepper motor.
+Because of this issue, we decided to instead go for a dc motor.
+Although significantly higher in both speed and torque, the DC motor lacked the precision of a DC motor.
+Fortunately, while designing the PCB, we anticipated issues regarding torque.
+Replacing controller boards were meant to be easy and without any trace modifications.
+Because of this design, the motors were replaced within 30 minutes. 
+Another issue was the current and voltage sensors.
+While looking for the wiring of the IC, there were a few confusions for the pinout.
+Because of this, the sensor was wired incorrectly and removed afterward. 
+Regarding the OLED display, this component was removed from the final design.
+Because of the lack of time and the less than essential purpose, it was removed completely.
+This feature may be added in a future iteration.
+
+** DONE Final Thoughts
+We consider this project a success.
+The current iteration is a feature-complete, highly portable IoT device which meets all the baseline goals we set during the planning phase as well as several stretch goals.
+As a class requirement, this project absolutely fulfilled its purpose of introducing concepts of operating systems in a tightly integrated environment.
+The learning experience in robotics, electronics, and operating systems was highly remarkable, inspiring further iterations in the future.
 
 * DONE Bibliography                                                  :ignore:
 # cite generates its own (correct) references heading, hence the :ignore:
 bibliographystyle:IEEEtran
 bibliography:references.bib
 
+* Appendix setup                                                     :ignore:
+# IEEEtrans stuff
+#+latex: \onecolumn
 #+latex: \appendices
 * TODO Bill of Materials
 # TODO: format this so it doesn't look like shit in twocolumn
-Below is a bill of materials for this project, including all hardware used.
-All hardware present has been successfully integrated into the current iteration of the prototype.
+Below, [Tab. ref:tab-bom] presents a bill of materials for this project, including all hardware used, parts ordered, and material required.
+All items present have been successfully integrated into the current iteration of the prototype.
 
 #+begin_center
 #+latex: \footnotesize
 #+latex: \renewcommand{\arraystretch}{1.7}
-#+ATTR_LATEX: :align r|lr|p{6.5cm}|r
+#+CAPTION: Bill of materials label:tab-bom
+#+ATTR_LATEX: :align |r|lr|p{7cm}|r|
+|--------+-------------------+--------------+----------------------------------------------------------+----------|
 | Amount | Component         | Price Ea ($) | Description                                              | Cost ($) |
 |--------+-------------------+--------------+----------------------------------------------------------+----------|
 |     10 | Capacitors        |        0.466 | 16v 1000UF Electrolitic SMD                              |     4.66 |
@@ -239,6 +315,7 @@ All hardware present has been successfully integrated into the current iteration
 |      1 | Voltage Regulator |         0.79 | B628 3-24V to 12V 2A Adjustable Boost Step-Up Converter  |     0.79 |
 |--------+-------------------+--------------+----------------------------------------------------------+----------|
 |        |                   |              | Total:                                                   |   113.66 |
+|--------+-------------------+--------------+----------------------------------------------------------+----------|
 #+TBLFM: @>$>='(format "%.2f" (apply '+ '(@<<..@>>)));N::@<<$>..@>>$>='(format "%.2f" (* $< $<<<));N
 
 #+latex: \normalsize
