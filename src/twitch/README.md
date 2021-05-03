@@ -9,8 +9,6 @@ And these movement commands, available unless disabled by !stop:
 - !b, !backward: move backward
 - !l, !left: turn left
 - !r, !right: turn right
-- !u, !up: look up
-- !d, !down: look down
 - !say: emit a phrase from the built in speaker
 
 Admin commands are:

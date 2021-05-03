@@ -139,7 +139,7 @@ fn main() -> anyhow::Result<()> {
     .with_command(
         &["help"],
         |chat, _, _| {
-            chat.writer.say(chat.msg, "Twitch doesn't support newlines in its commands so go read this for help: https://github.com/Shizcow/BooBot/blob/subproject/twitch/src/twitch/README.md").unwrap();
+            chat.writer.say(chat.msg, "Commands and descriptions can be found at https://github.com/Shizcow/BooBot/blob/master/src/twitch/README.md").unwrap();
         },
     ).with_command(
         &["info"],
